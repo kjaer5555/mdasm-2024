@@ -4,7 +4,7 @@ In the following report we have presented our analysis of the seven diseases in 
 
 ## 2.Diseases description
 
-
+The authors of the dataset have combined the Bowen’s disease (BOD) and the Squamous Cell Carcinoma (SCC) under the name of the latter one. This is because the BOD is also called SCC in situ. The term “in situ” refers to a surface type of skin cancer and if BOD is not being treated, it can progress to an invasive SCC. BOD is usually a red, scaly patch, which might itch, crust or ooze, but most have no particular feeling.
 
 A similar relation occurs between NEV and MEL. In most cases the former is considered as a birthmark and a benign tumor, and its presence is mostly based on genetics. However, if triggered it can evolve into a malignant infection and start spreading causing Melanoma.  
 
