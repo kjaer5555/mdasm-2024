@@ -4,6 +4,10 @@ In the following report we have presented our analysis of the seven diseases in 
 
 ## 2.Diseases description
 
+According to our research the diseases in the dataset can be divided into two major groups: pre-cancerous (ACK, SEK, NEV) and cancerous (SCC, MEL, BCC). Some of the lesions in the former group can lead to a cancerous condition from the second group and therefore it is essential to know what are the symptoms that can help us make a distinction between the diseases.  
+
+The first of our findings is that we concluded a relation between ACK and SCC. The cause of the diseases is excessive exposure to UV radiation and their appearance is also similar – white skin patches that feel like sandpaper. The lesion can start as ACK and develop into SCC.  
+
 The authors of the dataset have combined the Bowen’s disease (BOD) and the Squamous Cell Carcinoma (SCC) under the name of the latter one. This is because the BOD is also called SCC in situ. The term “in situ” refers to a surface type of skin cancer and if BOD is not being treated, it can progress to an invasive SCC. BOD is usually a red, scaly patch, which might itch, crust or ooze, but most have no particular feeling.
 
 A similar relation occurs between NEV and MEL. In most cases the former is considered as a birthmark and a benign tumor, and its presence is mostly based on genetics. However, if triggered it can evolve into a malignant infection and start spreading causing Melanoma.  
