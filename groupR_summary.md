@@ -4,6 +4,13 @@ In the following report we have presented our analysis of the seven diseases in 
 
 ## 2.Diseases description
 
+
+
+A similar relation occurs between NEV and MEL. In most cases the former is considered as a birthmark and a benign tumor, and its presence is mostly based on genetics. However, if triggered it can evolve into a malignant infection and start spreading causing Melanoma.  
+
+Medics haven't found a specific cause for SEK, but it is known that the disease is triggered by aging. They can vary in color and shape so as a result the tumors can hide the co-existence of another malignant lesion. This further intensifies the importance of correct diagnosis. 
+
+About the final disease, BCC, we have not found a direct predecessor, but it can also co-exist with some of the other lesions in our dataset. The main cause for BCC is UV radiation but what makes it different is that it develops in areas that are congested with blood vessels.  
 ## 3.Data set analysis
 
 ### 3.1 Photo quality
