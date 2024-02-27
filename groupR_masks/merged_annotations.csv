@@ -1,4 +1,4 @@
-img_name,feature_masks_01_25_r1,feature_masks_100_125_r5,feature_masks_25_50_r2,feature_mask_50_75_r3,feature_mask_75_100_r4
+img_name,r1,r5,r2,r3,r4
 groupR_masks\masks_01_25_r1\PAT_1418_1452_948,1671.0314,None,None,None,None
 groupR_masks\masks_01_25_r1\PAT_1429_1491_451,33824.87,None,None,None,None
 groupR_masks\masks_01_25_r1\PAT_1466_1618_147,74091.625,None,None,None,None
