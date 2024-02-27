@@ -1,10 +1,16 @@
-# Metadata analysis
+## 1.Introduction
 
-The complete metadata analysis of the dataset -  
-Andre G.C. Pacheco, Renato A. Krohling, 
-The impact of patient clinical information on automated skin cancer detection. 
+In the following report we have presented our analysis of the seven diseases in the data set, the quality of the photos, and the evaluation of the disease distribution within the 100 masked photos we have generated. We have shown the similarities and differences between the diseases and we have included extra commentaries on the symptoms which help identify each disease in a separate file.
 
-## A summary of the analysis 
+## 2.Diseases description
+
+## 3.Data set analysis
+
+### 3.1 Photo quality
+
+Due to the fact that the photos have been taken with a smartphone device, their quality varies across the data set. About two thirds of the photos are either not focused well, or there is a reflection of the flash which has "burned" some pixels, making them completely white. On some there are hairs which interfere with the lesion, making it hard to determine its exact borders. And in some occasions the lesion has raised sections making it impossible for the camera to have the whole of it focused, resulting in a blur in certain sections.
+
+### 3.2	Metadata analysis  
 
 Our data exploration aimed to assess how patient clinical information
 impacts skin cancer detection, focusing on eight clinical features.
@@ -29,3 +35,14 @@ characteristic that sets them apart from other lesions. Pattern changes
 were mostly associated with MEL, an essential marker for detecting this
 cancer type. Although it was challenging to discern clear trends for recent
 size increases, ACK notably lacked this feature. 
+
+## 4. Conclusion
+
+After analyzing the data, we have concluded that the diseases are distributed in a similar manner as they are in the whole data set, but since some of them are present on as few as 3 photos, we should mask a larger number of photos for better results.
+
+## 5. Citations
+### Metadata analysis
+
+The complete metadata analysis of the dataset -  
+Andre G.C. Pacheco, Renato A. Krohling, 
+The impact of patient clinical information on automated skin cancer detection. 
