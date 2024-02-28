@@ -10,7 +10,7 @@ The first of our findings is that we concluded a relation between ACK and SCC. T
 
 The authors of the dataset have combined the Bowen’s disease (BOD) and the Squamous Cell Carcinoma (SCC) under the name of the latter one. This is because the BOD is also called SCC in situ. The term “in situ” refers to a surface type of skin cancer and if BOD is not being treated, it can progress to an invasive SCC. BOD is usually a red, scaly patch, which might itch, crust or ooze, but most have no particular feeling.
 
-A similar relation occurs between NEV and MEL. In most cases the former is considered as a birthmark and a benign tumor, and its presence is mostly based on genetics. However, if triggered it can evolve into a malignant infection and start spreading causing Melanoma.  
+Another strong relation occurs between NEV and MEL. In most cases the former is considered as a birthmark and a benign tumor, and its presence is mostly based on genetics. However, if triggered it can evolve into a malignant infection and start spreading causing Melanoma.  
 
 Medics haven't found a specific cause for SEK, but it is known that the disease is triggered by aging. They can vary in color and shape so as a result the tumors can hide the co-existence of another malignant lesion. This further intensifies the importance of correct diagnosis. 
 
