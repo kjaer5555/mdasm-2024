@@ -19,7 +19,7 @@ About the final disease, BCC, we have not found a direct predecessor, but it can
 
 ### 3.1 Photo quality
 
-Due to the fact that the photos have been taken with a smartphone device, their quality varies across the data set. About two thirds of the photos are either not focused well, or there is a reflection of the flash which has "burned" some pixels, making them completely white. On some there are hairs which interfere with the lesion, making it hard to determine its exact borders. And in some occasions the lesion has raised sections making it impossible for the camera to have the whole of it focused, resulting in a blur in certain sections.
+Due to the fact that the photos have been taken with a smartphone device, their quality varies across the data set. About two thirds of the photos are either not focused well, or there is a reflection of the flash which has "burned" some pixels, making them completely white. On some of the pictures there are hairs which interfere with the lesion, making it hard to determine its exact borders. And finally in some occasions the lesion has raised sections making it impossible for the camera to have the whole of it focused, resulting in a blur in certain sections.
 
 ### 3.2	Metadata analysis  
 
@@ -49,7 +49,7 @@ size increases, ACK notably lacked this feature.
 
 ## 4. Conclusion
 
-After analyzing the data, we have concluded that the diseases are distributed in a similar manner as they are in the whole data set, but since some of them are present on as few as 3 photos, we should mask a larger number of photos for better results.
+After analyzing the data, we have concluded that the diseases are distributed in a similar manner as they are in the whole data set, but since some of them are present on as few as 3 photos, we should mask a larger number of photos in order to create a more accurate model.
 
 ## 5. Citations
 ### Metadata analysis
