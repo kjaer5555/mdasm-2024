@@ -58,7 +58,7 @@ The complete metadata analysis of the dataset -
 Andre G.C. Pacheco, Renato A. Krohling, 
 The impact of patient clinical information on automated skin cancer detection. 
 ### Diseases analysis
-Bowen's Disease information from American Osteopathic College of Dermatology(https://www.aocd.org/page/BowensDisease)
-Actinic keratoses (https://www.ncbi.nlm.nih.gov/books/NBK557401/)
-Seborrheic keratoses (https://www.ncbi.nlm.nih.gov/pmc/articles/PMC8274291/)
+Bowen's Disease information from American Osteopathic College of Dermatology(https://www.aocd.org/page/BowensDisease)<br>
+Actinic keratoses (https://www.ncbi.nlm.nih.gov/books/NBK557401/) <br>
+Seborrheic keratoses (https://www.ncbi.nlm.nih.gov/pmc/articles/PMC8274291/) <br>
 
