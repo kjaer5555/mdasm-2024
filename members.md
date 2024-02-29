@@ -1,3 +1,0 @@
-"András"
-"Sune"
-"Dimitar :)"
