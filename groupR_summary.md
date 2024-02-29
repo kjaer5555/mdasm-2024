@@ -57,3 +57,6 @@ After analyzing the data, we have concluded that the diseases are distributed in
 The complete metadata analysis of the dataset -  
 Andre G.C. Pacheco, Renato A. Krohling, 
 The impact of patient clinical information on automated skin cancer detection. 
+Bowen's Disease information from American Osteopathic College of Dermatology(https://www.aocd.org/page/BowensDisease)
+
+
