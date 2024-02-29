@@ -19,12 +19,11 @@ About the final disease, BCC, we have not found a direct predecessor, but it can
 
 ### 3.1 Photo quality
 
-Due to the fact that the photos have been taken with a smartphone device, their quality varies across the data set. About two thirds of the photos are either not focused well, or there is a reflection of the flash which has "burned" some pixels, making them completely white. On some of the pictures there are hairs which interfere with the lesion, making it hard to determine its exact borders. And finally in some occasions the lesion has raised sections making it impossible for the camera to have the whole of it focused, resulting in a blur in certain sections.
+Due to the fact that the photos have been taken with a smartphone device, their quality varies across the data set, even though authors of the dataset performed initial cleaning of the dataset removing 17% of the collected images owing to poor quality. First of all images are of different dimensions. About two thirds of the photos are either not focused well, or there is a reflection of the flash which has "burned" some pixels, making them completely white. On some of the pictures there are hairs which interfere with the lesion, making it hard to determine its exact borders. External artifacts, like pen markings or stickers are present which make potential analysis with computer vision harder. And finally in some occasions the lesion has raised sections making it impossible for the camera to have the whole of it focused, resulting in a blur in certain sections.
 
 ### 3.2	Metadata analysis  
 
-Our data exploration aimed to assess how patient clinical information
-impacts skin cancer detection, focusing on eight clinical features.
+Our data exploration aimed to assess how patient clinical information impacts skin cancer detection, focusing on eight clinical features. The dataset consists of 1641 skin lessions of 8 types, and 2298 images of them. The set is imbalanced - image size groups range from 52 for MEL up to 730 ACK. It had been being collected for 1.5 years 2018-2019 on low-income people, mainly of European origin and are or have been, with mean age of 60. 58% of skin lesions are biopsy proven within which all skin cancerns. The remaining diagnosis was based on a consensus of three senior (15+ years of experience) dermatologists.
 
 The analysis revealed distinct patterns between pigmented (NEV, MEL, SEK)
 and non-pigmented lesions (ACK, BCC, SCC), particularly in terms of bleeding
@@ -53,10 +52,8 @@ After analyzing the data, we have concluded that the diseases are distributed in
 
 ## 5. Citations
 ### Metadata analysis
-
-The complete metadata analysis of the dataset -  
-Andre G.C. Pacheco, Renato A. Krohling, 
-The impact of patient clinical information on automated skin cancer detection. 
+Andre G.C. Pacheco, Renato A. Krohling, The impact of patient clinical information on automated skin cancer detection. </br>
+Ande G. C. et al. 2020, PAD-UFES-20: a skin lesion dataset composed of patient data and clinical images collected from smartphones
 ### Diseases analysis
 Bowen's Disease information from American Osteopathic College of Dermatology(https://www.aocd.org/page/BowensDisease)<br>
 Actinic keratoses (https://www.ncbi.nlm.nih.gov/books/NBK557401/) <br>
