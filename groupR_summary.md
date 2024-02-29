@@ -61,4 +61,7 @@ The impact of patient clinical information on automated skin cancer detection.
 Bowen's Disease information from American Osteopathic College of Dermatology(https://www.aocd.org/page/BowensDisease)<br>
 Actinic keratoses (https://www.ncbi.nlm.nih.gov/books/NBK557401/) <br>
 Seborrheic keratoses (https://www.ncbi.nlm.nih.gov/pmc/articles/PMC8274291/) <br>
+Basal cell carcinoma (https://www.skincancer.org/skin-cancer-information/basal-cell-carcinoma/) <br>
+Squamous cell carcinoma (https://healthdirect.gov.au/squamous-cell-carcinoma) <br>
+Melanoma (https://www.mayoclinic.org/diseases-conditions/melanoma/symptoms-causes/syc-20374884) <br>
 
