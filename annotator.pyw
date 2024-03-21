@@ -9,7 +9,7 @@ class ImageAnnotator:
         self.master = master
         self.master.title("Image Annotator")
 
-        self.image_path = None
+        self.image_name = None
         self.image_label = tk.Label(master)
         self.sliders = {}
         self.current_directory = None
@@ -17,7 +17,7 @@ class ImageAnnotator:
         self.current_file_index = -1
         self.export_path = None
         self.annotations = dict()
-
+        
         self.setup_ui()
 
     def setup_ui(self):
@@ -36,34 +36,35 @@ class ImageAnnotator:
         self.annotate_button = tk.Button(self.master, text="Annotate", command=self.annotate_file)
         self.annotate_button.grid(row=4, column=1, columnspan=1)
         
-        self.save_button = tk.Button(self.master, text="Save annotations", command=self.save_annotations)
+        self.save_button = tk.Button(self.master, text="Export annotations", command=self.save_annotations)
         self.save_button.grid(row=5, column=1, columnspan=1)
 
-    def isAnnotated(self,filepath):
-        if sum(self.annotations[filepath])!=0:
+    def isAnnotated(self,filename):
+        if sum(self.annotations[filename])!=0:
             return "   Annotated   "
         else:
             return "Not Annotated"
 
-    def display_file(self, filepath):
-        self.image_path = filepath
-        self.annotate_label = tk.Label(self.master, text=self.isAnnotated(filepath))
+    def display_file(self, filename):
+        self.image_name = filename
+        filepath=self.current_directory + "/" + filename
+        self.annotate_label = tk.Label(self.master, text=self.isAnnotated(filename))
         self.annotate_label.grid(row=1,column=1)
         img = Image.open(filepath)
-        img.thumbnail((250, 250))
-        img = ImageTk.PhotoImage(img)
+        img = img.resize((500,500))
+        img = ImageTk.PhotoImage(image=img)
         self.image_label.configure(image=img)
         self.image_label.image = img
         self.image_label.grid(row=0, column=0, columnspan=3)
         for i,slider in enumerate(self.sliders.values()):
-            slider.set(self.annotations[filepath][i])
+            slider.set(self.annotations[filename][i])
         
 
     def annotate_file(self):
-        self.annotations[self.image_path]=[]
+        self.annotations[self.image_name]=[]
         for slider in self.sliders.values():
-                self.annotations[self.image_path].append(slider.get())
-        self.display_file(self.image_path)
+                self.annotations[self.image_name].append(slider.get())
+        self.display_file(self.image_name)
     
     def save_annotations(self):
         with open(self.export_path, 'w+', newline='') as csvfile:
@@ -76,14 +77,11 @@ class ImageAnnotator:
                         row.append(self.annotations[file][k])
                     writer.writerow(row)
     
-    def annotate_directory(self, directory_path, export_path):
-        self.current_directory = directory_path
+    def annotate_directory(self, export_path):
+        self.current_directory = filedialog.askdirectory()
         self.export_path = export_path
-        self.file_list = [os.path.join(directory_path, f) for f in os.listdir(directory_path) if f.endswith('png')]
-        for i in self.file_list:
-            self.annotations[i]=[0,0,0]
-        self.current_file_index = -1
-        self.next_image()
+        self.file_list = [f for f in os.listdir(self.current_directory) if f.endswith('png')]
+        
         if os.path.isfile(self.export_path):
             with open(export_path) as f:
                 for row in f:
@@ -94,7 +92,12 @@ class ImageAnnotator:
                     v2=int(split_row[2])
                     v3=int(split_row[3])
                     self.annotations[filename]=[v1,v2,v3]
-        self.display_file(self.image_path)
+        else:
+            for i in self.file_list:
+                self.annotations[i]=[0,0,0]
+        
+        self.current_file_index = -1
+        self.next_image()
 
     def display_current_file(self):
         if self.current_file_index < len(self.file_list):
@@ -113,5 +116,5 @@ class ImageAnnotator:
 if __name__ == "__main__":
     root = tk.Tk()
     annotator = ImageAnnotator(root)
-    annotator.annotate_directory("images", "annotations.csv")
+    annotator.annotate_directory("annotations.csv")
     root.mainloop()
