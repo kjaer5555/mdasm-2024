@@ -129,7 +129,8 @@ class ImageAnnotator:
                     self.annotations[filename].append(split_row[-1]) #for the skip
         else:
             for i in self.file_list:
-                self.annotations[i]=[-1]*(len(self.features)+1) #the +1 is for the skip
+                self.annotations[i]=[-1]*(len(self.features)) #the +1 is for the skip
+                self.annotations[i].append(" ")
         
         self.current_file_index = -1
         self.next_image()
@@ -150,7 +151,9 @@ class ImageAnnotator:
 
 if __name__ == "__main__":
     root = tk.Tk()
-    features=["color", "asymmetry", "Change in size","Irregular pigmentation","Irregular border","Inflammation","Itch or altered sensation","diameter > 7mm","Oozing"]
+    features=["Color", "Asymmetry", "Atypical pigment network",
+    "Blue-white veil","Atypical vascular pattern","Irregular streaks",
+    "Irregular dots/globules","Irregular blotches","Regression structures"]
     skipReasons=["low quality","unclear view","no visible leason"]
     annotator = ImageAnnotator(root,features=features,skipReasons=skipReasons)
     annotator.annotate_directory("annotations.csv")
