@@ -6,13 +6,14 @@ import csv
 import math
 
 class ImageAnnotator:
-    def __init__(self, master, features=["1","2","3"],skipReasons=["1","2","3"]):
+    def __init__(self, master, features=["1","2","3"],feature_types=["slider","slider","slider"],skipReasons=["1","2","3"]):
         self.master = master
         self.master.title("Image Annotator")
 
         self.image_name = None
         self.image_label = tk.Label(master)
         self.sliders = {}
+        self.checkboxes = {}
         self.current_directory = None
         self.file_list = []
         self.current_file_index = -1
@@ -21,11 +22,12 @@ class ImageAnnotator:
         
         self.features = features
         
-        #self.skip=0
+        self.feature_types = feature_types
+        
         self.skipReasons=skipReasons
         self.skipReason=tk.StringVar()
         self.skipReason.set(" ")
-        self.checkboxes = {}
+        self.skipboxes = {}
         
         self.setup_ui()
 
@@ -34,16 +36,21 @@ class ImageAnnotator:
             row=3+math.floor(i/9)
             column=i%9
             tk.Label(self.master, text=label.capitalize()).grid(row=row-1, column=column)
-            slider = tk.Scale(self.master, from_=1, to=5, orient=tk.HORIZONTAL)
-            slider.grid(row=row, column=column)
-            self.sliders[label] = slider
+            if self.feature_types[i]=="slider":
+                slider = tk.Scale(self.master, from_=1, to=5, orient=tk.HORIZONTAL)
+                slider.grid(row=row, column=column)
+                self.sliders[label] = slider
+            elif self.feature_types[i]=="checkbox":
+                self.checkboxes[label] = tk.IntVar()
+                checkbox = tk.Checkbutton(self.master, text="",variable=self.checkboxes[label], onvalue=1, offvalue=0)
+                checkbox.grid(row=row,column=column)
 
         column=int(len(self.features)/2)
         
         for i,reason in enumerate(self.skipReasons):
             checkbox = tk.Checkbutton(self.master, text=reason,variable=self.skipReason, onvalue=reason, offvalue=" ")
             checkbox.grid(row=6,column=column-int(len(self.skipReasons)/2)+i)
-            self.checkboxes[reason]=checkbox
+            self.skipboxes[reason]=checkbox
         
         self.skipLabel = tk.Label(self.master)
         self.skipLabel.grid(row=7,column=column)
@@ -62,7 +69,7 @@ class ImageAnnotator:
         self.save_button.grid(row=9, column=column, columnspan=1)
 
     def isAnnotated(self,filename):
-        if sum(self.annotations[filename][:-1])!=-len(self.annotations[filename][:-1]):
+        if sum(self.annotations[filename][:-1])!=0 or self.annotations[filename][-1]!=" ":
             return "   Annotated   "
         else:
             return "Not Annotated"
@@ -82,8 +89,13 @@ class ImageAnnotator:
         self.image_label.image = img
         self.image_label.grid(row=0, column=column, columnspan=3)
         
-        for i,slider in enumerate(self.sliders.values()):
+        i=0
+        for slider in self.sliders.values():
             slider.set(self.annotations[filename][i])
+            i+=1
+        for checkbox in self.checkboxes.values():
+            checkbox.set(int(self.annotations[filename][i]))
+            i+=1
             
         self.skipLabel.config(text=self.annotations[filename][-1])
         
@@ -94,6 +106,8 @@ class ImageAnnotator:
             self.annotations[self.image_name]=[]
             for slider in self.sliders.values():
                     self.annotations[self.image_name].append(slider.get())
+            for checkbox in self.checkboxes.values():
+                    self.annotations[self.image_name].append(checkbox.get())
             self.annotations[self.image_name].append(" ") #there was no skip so it's empty
         else:
             self.annotations[self.image_name]=[0]*len(self.features)
@@ -129,7 +143,7 @@ class ImageAnnotator:
                     self.annotations[filename].append(split_row[-1]) #for the skip
         else:
             for i in self.file_list:
-                self.annotations[i]=[-1]*(len(self.features)) #the +1 is for the skip
+                self.annotations[i]=[0]*(len(self.features)) #the +1 is for the skip
                 self.annotations[i].append(" ")
         
         self.current_file_index = -1
@@ -151,10 +165,14 @@ class ImageAnnotator:
 
 if __name__ == "__main__":
     root = tk.Tk()
+    
     features=["Color", "Asymmetry", "Atypical pigment network",
     "Blue-white veil","Atypical vascular pattern","Irregular streaks",
     "Irregular dots/globules","Irregular blotches","Regression structures"]
+    
+    feature_types=["slider"]*2+["checkbox"]*7
+    
     skipReasons=["low quality","unclear view","no visible leason"]
-    annotator = ImageAnnotator(root,features=features,skipReasons=skipReasons)
+    annotator = ImageAnnotator(root,features=features,feature_types=feature_types,skipReasons=skipReasons)
     annotator.annotate_directory("annotations.csv")
     root.mainloop()
