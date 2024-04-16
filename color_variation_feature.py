@@ -46,7 +46,7 @@ for x in range(len(pic)):
 
     sdt = np.array(sdt)
 
-    sss = rgb2hsv(sdt)*100
+    sss = rgb2hsv(sdt)
 
     
     np.round(sss, decimals=0)
