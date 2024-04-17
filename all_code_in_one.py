@@ -289,6 +289,7 @@ df_features['pink_presence'] =pink_presence
 df_features['black_presence'] =black_presence
 df_features['atypicturesal'] = atypical_pigmentation_network
 df_features['blue-whiteveils'] = blue_white_veil
+df_features['asymmetry_values'] = asymmetry_values
 
 
 
