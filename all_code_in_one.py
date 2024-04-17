@@ -13,17 +13,20 @@ import numpy as np
 from scipy.spatial.distance import cityblock
 from skimage.transform import resize, rotate
 
+# Load image directories
 directory = "pictures/"
 directory_mask = "groupR_masks/"
 pictures = os.listdir(directory)
 picturestures_mask = os.listdir(directory_mask)
+
+#Prepare data holders
 nameOfPictures = []
 hue_values = []
 saturation_values = []
 value_values = []
 asymmetry_values = []
 
-atypical_pigmentation_network = []
+atypical_pigment_network = []
 
 red_presence=[]
 brown_presence=[]
@@ -33,6 +36,7 @@ black_presence=[]
 
 blue_white_veil=[]
 
+#Feature extraction functions
 def is_darker(color1, color2):
     """ Input: Two combinations of rgb values
         Output: The result of the comparison of brightness between the two images. It searches the darker one."""
@@ -43,9 +47,9 @@ def is_darker(color1, color2):
     # Compare grayscale values
     return gray1 < gray2
 
-
 def get_cropped(img, padding=0):
-    """Crops the image to bounding boxes with given padding."""
+    """ Input: Original image
+        Output: Reduced to bounding boxes version of the original image with given padding."""
     # Find coordinates of non-zero pixels
     cords = np.where(img != 0)
     # Determine the bounds of the non-zero pixels
@@ -59,7 +63,6 @@ def get_cropped(img, padding=0):
     # Crop the image
     cropped_img = img[x_min:x_max+1, y_min:y_max+1]
     return cropped_img
-
 
 # PLEASE try other version of the asymetry from the asymmetry.ipynb, there are 4 at least. Check which yields
 # highest predicitve value.
@@ -106,7 +109,9 @@ def asymmetry_classic(img):
     return score
 
 def get_apn_score(cropped_lesion, cropped_lesion_mask ):
-    """ Input: Croped version of the image and its mask that contains the major area of the lesion. 
+    """ Input: Cropped version of the image and its mask that contains the major area of the lesion. 
+        Method: Using K-means clustering we determine two segments in the cropped section (a dark one and a bright one). 
+        The dark one is considered the primary source of the disease.
         Output: The proportion of overlapp between the darker segmented area and the cropped original mask. """
     #flatten the image
     reshape=cropped_lesion.reshape(-1,3)
@@ -116,7 +121,7 @@ def get_apn_score(cropped_lesion, cropped_lesion_mask ):
     k_clust=KMeans(n_clusters=2, n_init=10)
     k_clust.fit(reshape)
     segmentation_labels=k_clust.labels_ #gets the name of the 2 segments
-    centroids = k_clust.cluster_centers_ #gets the colour value of the centeroid for the two clusters
+    centroids = k_clust.cluster_centers_ #gets the color value of the centeroid for the two clusters
 
     label_image = segmentation_labels.reshape(cropped_lesion_mask.shape[:2])#reshapes the segmented images so that they can be compared to the cropped mask
 
@@ -138,18 +143,24 @@ def get_apn_score(cropped_lesion, cropped_lesion_mask ):
     return overlapping_area/ np.sum(cropped_lesion_mask) #calculate the overlap between the darker segment and the original mask
 
 def color_extraction(segments_mean_in_hsv):
-    colours_bins=[0,0,0,0,0,0,0,0,0,0,0]
-    colours=[[355, 83, 93], #red(pantone) - 
-         [5, 93, 100], #some other red - 
-         [30, 100, 59], #brown - 
+    """ Input: Mean HSV values of each megapixel in the cropped segment of the original picture.
+        Method: Calculates the Manhattan distance of each mean value to the predefined color categories 
+        and takes the minimal found. All segments are distibuted among the major color labels 
+        and their relative presence in the lesion is calculated. 
+        Output: Relative presence of each major color found in lesions
+    """
+    colors_bins=[0,0,0,0,0,0,0,0,0,0,0]
+    colors=[[355, 83, 93], #red(pantone)
+         [5, 93, 100], #some other red
+         [30, 100, 59], #brown
          [209, 24, 44], #black coral
          [210, 50, 80],  #some blue-gray
-         [329,49,97], #persian pink - 
-         [350,25,100], #pink - 
-         [346,42,97], #sherbet pink - 
-         [354,89,61], #ruby red - 
-         [20,56,69]] #brown sugar - 
-         #[24,49,24]] #bistre - dark brown - 
+         [329,49,97], #persian pink
+         [350,25,100], #pink
+         [346,42,97], #sherbet pink
+         [354,89,61], #ruby red
+         [20,56,69]] #brown sugar
+         #[24,49,24]] #bistre - dark brown
     multip=np.array([360,100,100])
     #finishing part of the rgb to hsv conversion
     segments_mean_in_hsv_scaled = segments_mean_in_hsv*multip
@@ -157,37 +168,43 @@ def color_extraction(segments_mean_in_hsv):
         distance_color=[0,0,0,0,0,0,0,0,0,0]
         #if the v value of HSV is below 25, then it is black and goes to bin 5
         if int(i[2])<=25:
-            colours_bins[10]+=1
+            colors_bins[10]+=1
         else:
-            for j in enumerate(colours):
-                #Calculate the Manhattans distance between the current pixel and the defined colours
+            for j in enumerate(colors):
+                #Calculate the Manhattans distance between the current pixel and the defined colors
                 distance_color[j[0]]=cityblock(i, j[1])
             smallest_dist=min(distance_color)
             for k in enumerate(distance_color):
                 if k[1]==smallest_dist:
-                    colours_bins[k[0]]+=1
-        #print(colours_bins)
-        #thrashhold=0.05*
-        #counter=0
-    colour_bins_new=[colours_bins[0]+colours_bins[1]+colours_bins[8], colours_bins[2]+colours_bins[9], colours_bins[3]+colours_bins[4], colours_bins[5]+colours_bins[6]+colours_bins[7], colours_bins[10]]
-    colour_bins_final=[a_bin/sum(colours_bins) for a_bin in colour_bins_new]
-    return colour_bins_final
+                    colors_bins[k[0]]+=1
+      
+    color_bins_new=[colors_bins[0]+colors_bins[1]+colors_bins[8], colors_bins[2]+colors_bins[9], colors_bins[3]+colors_bins[4], colors_bins[5]+colors_bins[6]+colors_bins[7], colors_bins[10]] #color reassignment
+    color_bins_final=[a_bin/sum(colors_bins) for a_bin in color_bins_new] #relative presence
+    return color_bins_final
     
 def color_variance(segments_mean_in_hsv):
-        h = []
-        s = []
-        v = []
-        #need comment
-        for x in segments_mean_in_hsv:
-            h.append(x[0].tolist())
-            s.append(x[1].tolist())
-            v.append(x[2].tolist())
-            
-        h = list(((np.array(h)*360 + 180)%360)/360)
-        return h,s,v
+    """ Input: Mean HSV values of each megapixel in the cropped segment of the original picture.
+        Method: Calculates standard deviation between the mean values extracted from the segments for each channel. 
+        Output: Standard deviation of the HSV values in the cropped area.
+    """
+    h = []
+    s = []
+    v = []
+    
+    for x in segments_mean_in_hsv: #allocating values to the proper channel
+        h.append(x[0].tolist())
+        s.append(x[1].tolist())
+        v.append(x[2].tolist())
+
+    h = list(((np.array(h)*360 + 180)%360)/360) # solution to the misrepresentation of hsv scale
+
+    return statistics.stdev(h)**2,statistics.stdev(s_pic)**2,statistics.stdev(v_pic)**2
 
 def is_bwv(cropped_lesion):
-    
+    """ Input: Cropped version of the image.
+        Method: Apply a predefined blue-white filter to the image and measure relative presence. 
+        Output: Presence of blue-white veil in the lesion.
+    """
     # Enhance blue channel
     factor = 2.5
     img_float = cropped_lesion.astype('float')
@@ -207,14 +224,14 @@ def is_bwv(cropped_lesion):
         "val_min": 0.0,
         "val_max": 1.0
     }
-    #get bwv value
+    #build bwv value filter
     hsv_img = rgb2hsv(cropped_lesion)
     blue_mask = (hsv_img[..., 0] >= values["hue_min"]) & (hsv_img[..., 0] <= values["hue_max"]) & \
            (hsv_img[..., 1] >= values["sat_min"]) & (hsv_img[..., 1] <= values["sat_max"]) & \
            (hsv_img[..., 2] >= values["val_min"]) & (hsv_img[..., 2] <= values["val_max"])
     image_with_blue_mask = np.where(blue_mask[..., None], cropped_lesion, 0)
     
-    #score
+    #score of relative presence
     treshold=0.05
     score = np.count_nonzero(image_with_blue_mask) / np.count_nonzero(cropped_lesion)
     bin_score=0
@@ -225,34 +242,36 @@ def is_bwv(cropped_lesion):
      
  
 i = 0
-for x in range(len(pictures)):
+for x in range(len(pictures)): #loop through all pictures in the database and extract their features
     if os.path.exists(directory_mask+pictures[x].split(".")[0]+'_mask'+".png"):
         rgb_img = plt.imread(directory+pictures[x])[:,:,:3]
         mask = plt.imread(directory_mask+pictures[x].split(".")[0]+'_mask'+".png")
-        #print((directory+pictures[x]), (directory_mask+pictures[x].split(".")[0]+'_mask'+".png"))
+        
         print(i)
         i += 1
 
     else:
         continue
+
+    #crop out lesion area
     nameOfPictures.append(pictures[x].split(".")[0])
     lesion_coords = np.where(mask != 0)
     min_x = min(lesion_coords[0])
     max_x = max(lesion_coords[0])
     min_y = min(lesion_coords[1])
     max_y = max(lesion_coords[1])
-    cropped_lesion = rgb_img[min_x:max_x,min_y:max_y]
-    cropped_lesion_mask=mask[min_x:max_x,min_y:max_y]
-
-    segments = slic(cropped_lesion, n_segments=250, compactness=100)
+    cropped_lesion = rgb_img[min_x:max_x,min_y:max_y] #cropped section from the original picture
+    cropped_lesion_mask=mask[min_x:max_x,min_y:max_y] #cropped section from the original mask
 
     apn_score = get_apn_score(cropped_lesion, cropped_lesion_mask) 
-    atypical_pigmentation_network.append(apn_score)
+    atypical_pigment_network.append(apn_score)
     asymmetry_values.append(asymmetry_classic(cropped_lesion_mask))
+    blue_white_veil.append(is_bwv(cropped_lesion))
 
     # Calculate the mean color for each segment
+    segments = slic(cropped_lesion, n_segments=250, compactness=100) #devide image into megapixels
     segment_means = []
-    for segment_value in np.unique(segments):
+    for segment_value in np.unique(segments): #calculates the mean color values for each segment in found
         mask_of_segment = segments == segment_value
         segment_pixels = cropped_lesion[mask_of_segment]
         segment_mean = segment_pixels.mean(axis=0)
@@ -268,17 +287,16 @@ for x in range(len(pictures)):
     black_presence.append(colors_presence[4])
     
     h_pic,s_pic,v_pic=color_variance(segments_mean_in_hsv)
-    hue_values.append(statistics.stdev(h_pic)**2)
-    saturation_values.append(statistics.stdev(s_pic)**2)
-    value_values.append(statistics.stdev(v_pic)**2)
-
-    blue_white_veil.append(is_bwv(cropped_lesion))
-    
+    hue_values.append(h_pic)
+    saturation_values.append(s_pic)
+    value_values.append(v_pic)
 
 
+#Build features database
 df_features = pd.DataFrame()
 
 df_features['Name_Of_Picture'] = nameOfPictures
+df_features['asymmetry_values'] = asymmetry_values
 df_features['H_value'] = hue_values
 df_features['S_value'] = saturation_values
 df_features['V_value'] = value_values
@@ -287,18 +305,16 @@ df_features['brown_presence'] =brown_presence
 df_features['blue_presence'] =blue_presence
 df_features['pink_presence'] =pink_presence
 df_features['black_presence'] =black_presence
-df_features['atypicturesal'] = atypical_pigmentation_network
-df_features['blue-whiteveils'] = blue_white_veil
-df_features['asymmetry_values'] = asymmetry_values
+df_features['atypical_pigment_network'] = atypical_pigment_network
+df_features['blue-white_veil'] = blue_white_veil
 
 
 
+#get original diagnostics
 path_diagnostics_data = 'image_ids_groups.csv'
 
 df_img_diadnostics = pd.read_csv(path_diagnostics_data)
 
-
-# Assuming df_var and df_img are defined with appropriate data
 diagnostic = []
 cancer = []
 
@@ -310,7 +326,7 @@ for name in df_features['Name_Of_Picture']:
     if img_name in img_dict:
         diag = img_dict[img_name]
         diagnostic.append(diag)
-        if diag in ['BCC', 'MEL', 'SCC']:
+        if diag in ['BCC', 'MEL', 'SCC']: #cancerous diagnoses
             cancer.append(1)
         else:
             cancer.append(0)
@@ -322,8 +338,5 @@ for name in df_features['Name_Of_Picture']:
 df_features['diagnostic'] = diagnostic
 df_features['cancer_or_not'] = cancer
 
-
-
-
-
+#export all data into a file
 df_features.to_csv('features.csv')
