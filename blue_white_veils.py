@@ -52,7 +52,14 @@ def detect_bwv(img, mask):
     # get bwv value
     bwv_mask = get_bwv(img)
     
-    return np.count_nonzero(bwv_mask) / np.count_nonzero(img) , bwv_mask
+    #score
+    treshold=0.05
+    score = np.count_nonzero(bwv_mask) / np.count_nonzero(img)
+    bin_score=0
+    if score >= treshold:
+        bin_score=1
+    
+    return  bin_score, bwv_mask
 
 #some paths
 img = plt.imread("pictures/...")
