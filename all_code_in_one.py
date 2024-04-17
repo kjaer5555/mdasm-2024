@@ -23,12 +23,13 @@ value_values = []
 
 atypical_pigmentation_network = []
 
-color_names=["red", 'brown', 'blue', 'pink', 'black']
 red_presence=[]
 brown_presence=[]
 blue_presence=[]
 pink_presence=[]
 black_presence=[]
+
+blue_white_vail=[]
 
 def is_darker(color1, color2):
     """ Input: Two combinations of rgb values
@@ -40,7 +41,7 @@ def is_darker(color1, color2):
     # Compare grayscale values
     return gray1 < gray2
 
-def get_apn(cropped_lesion, cropped_lesion_mask ):
+def get_apn_score(cropped_lesion, cropped_lesion_mask ):
     """ Input: Croped version of the image and its mask that contains the major area of the lesion. 
         Output: The proportion of overlapp between the darker segmented area and the cropped original mask. """
     #flatten the image
@@ -121,6 +122,10 @@ def color_variance(segments_mean_in_hsv):
         h = list(((np.array(h)*360 + 180)%360)/360)
         return h,s,v
 
+def is_bwv():
+
+    return 
+ 
 i = 0
 for x in range(len(pictures)):
     if os.path.exists(directory_mask+pictures[x].split(".")[0]+'_mask'+".png"):
@@ -143,7 +148,7 @@ for x in range(len(pictures)):
 
     segments = slic(cropped_lesion, n_segments=250, compactness=100)
 
-    apn_score = get_apn(cropped_lesion, cropped_lesion_mask) 
+    apn_score = get_apn_score(cropped_lesion, cropped_lesion_mask) 
     atypical_pigmentation_network.append(apn_score)
 
     # Calculate the mean color for each segment
@@ -167,6 +172,8 @@ for x in range(len(pictures)):
     hue_values.append(statistics.stdev(h_pic)**2)
     saturation_values.append(statistics.stdev(s_pic)**2)
     value_values.append(statistics.stdev(v_pic)**2)
+
+    blue_white_vail.append(is_bwv())
     
 
 
