@@ -1,0 +1,10 @@
+prefix=/Users/sunechristiansen/sune/ds_project/mdasm-2024/.env
+exec_prefix=/Users/sunechristiansen/sune/ds_project/mdasm-2024/.env
+libdir=/Users/sunechristiansen/sune/ds_project/mdasm-2024/.env/lib
+includedir=/Users/sunechristiansen/sune/ds_project/mdasm-2024/.env/include
+
+Name: libavif
+Description: Library for encoding and decoding .avif files
+Version: 0.11.1
+Libs: -L${libdir} -lavif
+Cflags: -I${includedir} -DAVIF_DLL

@@ -1,0 +1,111 @@
+{
+  "build": "hc377ac9_1",
+  "build_number": 1,
+  "channel": "https://repo.anaconda.com/pkgs/main/osx-arm64",
+  "constrains": [],
+  "depends": [
+    "libcxx >=12.0.0"
+  ],
+  "extracted_package_dir": "/Users/sunechristiansen/anaconda3/pkgs/libaec-1.0.4-hc377ac9_1",
+  "files": [
+    "bin/aec",
+    "include/libaec.h",
+    "include/szlib.h",
+    "lib/libaec.0.0.10.dylib",
+    "lib/libaec.0.dylib",
+    "lib/libaec.dylib",
+    "lib/libsz.2.0.1.dylib",
+    "lib/libsz.2.dylib",
+    "lib/libsz.dylib",
+    "share/man/man1/aec.1"
+  ],
+  "fn": "libaec-1.0.4-hc377ac9_1.conda",
+  "legacy_bz2_md5": "e97f2f3ed8030db3ed46111dc6d0dbaa",
+  "license": "BSD-2-Clause",
+  "license_family": "BSD",
+  "link": {
+    "source": "/Users/sunechristiansen/anaconda3/pkgs/libaec-1.0.4-hc377ac9_1",
+    "type": 1
+  },
+  "md5": "fa99e6fdd5c4db1293a1eda492552ac6",
+  "name": "libaec",
+  "package_tarball_full_path": "/Users/sunechristiansen/anaconda3/pkgs/libaec-1.0.4-hc377ac9_1.conda",
+  "paths_data": {
+    "paths": [
+      {
+        "_path": "bin/aec",
+        "path_type": "hardlink",
+        "sha256": "1f2c4c66fc025adb013ce47ac49328224c9da09002363e53ba6a85ea7d9e028d",
+        "sha256_in_prefix": "1f2c4c66fc025adb013ce47ac49328224c9da09002363e53ba6a85ea7d9e028d",
+        "size_in_bytes": 68048
+      },
+      {
+        "_path": "include/libaec.h",
+        "path_type": "hardlink",
+        "sha256": "b2adb7928fb05483a6dd7b70502e23ddb535b7617a023ec49611e5b85ea25e4d",
+        "sha256_in_prefix": "b2adb7928fb05483a6dd7b70502e23ddb535b7617a023ec49611e5b85ea25e4d",
+        "size_in_bytes": 5403
+      },
+      {
+        "_path": "include/szlib.h",
+        "path_type": "hardlink",
+        "sha256": "a5444a8b6eb74709144eb4c729c68734f014b83ee876fb75092f05257ead01d2",
+        "sha256_in_prefix": "a5444a8b6eb74709144eb4c729c68734f014b83ee876fb75092f05257ead01d2",
+        "size_in_bytes": 2857
+      },
+      {
+        "_path": "lib/libaec.0.0.10.dylib",
+        "path_type": "hardlink",
+        "sha256": "172a8f6633979e2b3d765812efef800f29db9bd910dac502871cb32d35527142",
+        "sha256_in_prefix": "172a8f6633979e2b3d765812efef800f29db9bd910dac502871cb32d35527142",
+        "size_in_bytes": 86016
+      },
+      {
+        "_path": "lib/libaec.0.dylib",
+        "path_type": "softlink",
+        "sha256": "172a8f6633979e2b3d765812efef800f29db9bd910dac502871cb32d35527142",
+        "size_in_bytes": 86016
+      },
+      {
+        "_path": "lib/libaec.dylib",
+        "path_type": "softlink",
+        "sha256": "172a8f6633979e2b3d765812efef800f29db9bd910dac502871cb32d35527142",
+        "size_in_bytes": 86016
+      },
+      {
+        "_path": "lib/libsz.2.0.1.dylib",
+        "path_type": "hardlink",
+        "sha256": "710dfc3fa1903ef0af3b3fb01372760e5330c6733bd3dada7d11cb5309c69282",
+        "sha256_in_prefix": "710dfc3fa1903ef0af3b3fb01372760e5330c6733bd3dada7d11cb5309c69282",
+        "size_in_bytes": 67680
+      },
+      {
+        "_path": "lib/libsz.2.dylib",
+        "path_type": "softlink",
+        "sha256": "710dfc3fa1903ef0af3b3fb01372760e5330c6733bd3dada7d11cb5309c69282",
+        "size_in_bytes": 67680
+      },
+      {
+        "_path": "lib/libsz.dylib",
+        "path_type": "softlink",
+        "sha256": "710dfc3fa1903ef0af3b3fb01372760e5330c6733bd3dada7d11cb5309c69282",
+        "size_in_bytes": 67680
+      },
+      {
+        "_path": "share/man/man1/aec.1",
+        "path_type": "hardlink",
+        "sha256": "12ebfca2c9978afa36f9d515feb8630a33930a5f1ba0a5cc03481662067d7c6a",
+        "sha256_in_prefix": "12ebfca2c9978afa36f9d515feb8630a33930a5f1ba0a5cc03481662067d7c6a",
+        "size_in_bytes": 1066
+      }
+    ],
+    "paths_version": 1
+  },
+  "requested_spec": "None",
+  "sha256": "dd9907f02598e28a0e75a226a2b1f227e6d75ee04fbfe9c7506b446de0e63ff2",
+  "size": 23294,
+  "subdir": "osx-arm64",
+  "timestamp": 1628861308643,
+  "url": "https://repo.anaconda.com/pkgs/main/osx-arm64/libaec-1.0.4-hc377ac9_1.conda",
+  "version": "1.0.4"
+}

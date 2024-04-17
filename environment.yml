@@ -1,0 +1,10 @@
+name: C:\dsproject\environments\schoolenv
+channels:
+  - defaults
+dependencies:
+  - matplotlib
+  - python=3.10
+  - jupyterlab
+  - pandas
+  - scipy
+prefix: C:\dsproject\environments\schoolenv
