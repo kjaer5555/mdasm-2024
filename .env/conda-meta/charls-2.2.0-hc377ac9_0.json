@@ -1,0 +1,147 @@
+{
+  "build": "hc377ac9_0",
+  "build_number": 0,
+  "channel": "https://repo.anaconda.com/pkgs/main/osx-arm64",
+  "constrains": [],
+  "depends": [
+    "libcxx >=12.0.0"
+  ],
+  "extracted_package_dir": "/Users/sunechristiansen/anaconda3/pkgs/charls-2.2.0-hc377ac9_0",
+  "files": [
+    "include/charls/annotations.h",
+    "include/charls/api_abi.h",
+    "include/charls/charls.h",
+    "include/charls/charls_jpegls_decoder.h",
+    "include/charls/charls_jpegls_encoder.h",
+    "include/charls/jpegls_error.h",
+    "include/charls/public_types.h",
+    "include/charls/version.h",
+    "lib/cmake/charls/charlsConfig-release.cmake",
+    "lib/cmake/charls/charlsConfig.cmake",
+    "lib/libcharls.2.2.0.dylib",
+    "lib/libcharls.2.dylib",
+    "lib/libcharls.dylib",
+    "lib/pkgconfig/charls.pc"
+  ],
+  "fn": "charls-2.2.0-hc377ac9_0.conda",
+  "legacy_bz2_md5": "3998b53d542b1c04175df5d214926067",
+  "license": "BSD-3-Clause",
+  "license_family": "BSD",
+  "link": {
+    "source": "/Users/sunechristiansen/anaconda3/pkgs/charls-2.2.0-hc377ac9_0",
+    "type": 1
+  },
+  "md5": "7a1157452fd80dd6576d73816c28aeee",
+  "name": "charls",
+  "package_tarball_full_path": "/Users/sunechristiansen/anaconda3/pkgs/charls-2.2.0-hc377ac9_0.conda",
+  "paths_data": {
+    "paths": [
+      {
+        "_path": "include/charls/annotations.h",
+        "path_type": "hardlink",
+        "sha256": "11e2f10b42b9209bf3e5564e1d18fbfb93bae39c3ed6e2127a9c6fddce0516a9",
+        "sha256_in_prefix": "11e2f10b42b9209bf3e5564e1d18fbfb93bae39c3ed6e2127a9c6fddce0516a9",
+        "size_in_bytes": 1144
+      },
+      {
+        "_path": "include/charls/api_abi.h",
+        "path_type": "hardlink",
+        "sha256": "ce667084357c6811e0a022219239228abc6acedefcfab0afac5916e0ce38ff5a",
+        "sha256_in_prefix": "ce667084357c6811e0a022219239228abc6acedefcfab0afac5916e0ce38ff5a",
+        "size_in_bytes": 1716
+      },
+      {
+        "_path": "include/charls/charls.h",
+        "path_type": "hardlink",
+        "sha256": "fc722ecff738fd6f5617819f25432c7653256df7e8294ee4bb7a7dcd94d17eb9",
+        "sha256_in_prefix": "fc722ecff738fd6f5617819f25432c7653256df7e8294ee4bb7a7dcd94d17eb9",
+        "size_in_bytes": 685
+      },
+      {
+        "_path": "include/charls/charls_jpegls_decoder.h",
+        "path_type": "hardlink",
+        "sha256": "c548d7c5ab61e112c1afb3ac033cbe6373327b97ef855d5bde78d9fd8ab42367",
+        "sha256_in_prefix": "c548d7c5ab61e112c1afb3ac033cbe6373327b97ef855d5bde78d9fd8ab42367",
+        "size_in_bytes": 25988
+      },
+      {
+        "_path": "include/charls/charls_jpegls_encoder.h",
+        "path_type": "hardlink",
+        "sha256": "52068d7d5bdd82c4a31e12bc205cf36ea5ed3aca1852b992e8595a5850420f90",
+        "sha256_in_prefix": "52068d7d5bdd82c4a31e12bc205cf36ea5ed3aca1852b992e8595a5850420f90",
+        "size_in_bytes": 23893
+      },
+      {
+        "_path": "include/charls/jpegls_error.h",
+        "path_type": "hardlink",
+        "sha256": "f49a15626f9028246f1c5c1aa5fb286ef9bd2cd7fa3cfcac51bccd72afff75d5",
+        "sha256_in_prefix": "f49a15626f9028246f1c5c1aa5fb286ef9bd2cd7fa3cfcac51bccd72afff75d5",
+        "size_in_bytes": 1889
+      },
+      {
+        "_path": "include/charls/public_types.h",
+        "path_type": "hardlink",
+        "sha256": "cf42abdd6314ad531dfa570806f05d650ef06c63a0d33c764d18f4f4fab975b5",
+        "sha256_in_prefix": "cf42abdd6314ad531dfa570806f05d650ef06c63a0d33c764d18f4f4fab975b5",
+        "size_in_bytes": 39133
+      },
+      {
+        "_path": "include/charls/version.h",
+        "path_type": "hardlink",
+        "sha256": "0064a69396b79b3a40bf1a8290c022cd2b43dfd7603b5c5bf6cd7ebc87f6f6fa",
+        "sha256_in_prefix": "0064a69396b79b3a40bf1a8290c022cd2b43dfd7603b5c5bf6cd7ebc87f6f6fa",
+        "size_in_bytes": 1180
+      },
+      {
+        "_path": "lib/cmake/charls/charlsConfig-release.cmake",
+        "path_type": "hardlink",
+        "sha256": "e75fc606ad2ebf1819e7c421cee23013982f58da5f43fd6d348a594d0434e09b",
+        "sha256_in_prefix": "e75fc606ad2ebf1819e7c421cee23013982f58da5f43fd6d348a594d0434e09b",
+        "size_in_bytes": 814
+      },
+      {
+        "_path": "lib/cmake/charls/charlsConfig.cmake",
+        "path_type": "hardlink",
+        "sha256": "2c0bf85485306ad21e12653e56e96df42210e8b397c12b39a5ccd5a3ca47a947",
+        "sha256_in_prefix": "2c0bf85485306ad21e12653e56e96df42210e8b397c12b39a5ccd5a3ca47a947",
+        "size_in_bytes": 3225
+      },
+      {
+        "_path": "lib/libcharls.2.2.0.dylib",
+        "path_type": "hardlink",
+        "sha256": "dca88c03d9cf05a38c0ff048108b065473e6d4ea2a835fa7fd11729427ad268b",
+        "sha256_in_prefix": "dca88c03d9cf05a38c0ff048108b065473e6d4ea2a835fa7fd11729427ad268b",
+        "size_in_bytes": 316560
+      },
+      {
+        "_path": "lib/libcharls.2.dylib",
+        "path_type": "softlink",
+        "sha256": "dca88c03d9cf05a38c0ff048108b065473e6d4ea2a835fa7fd11729427ad268b",
+        "size_in_bytes": 316560
+      },
+      {
+        "_path": "lib/libcharls.dylib",
+        "path_type": "softlink",
+        "sha256": "dca88c03d9cf05a38c0ff048108b065473e6d4ea2a835fa7fd11729427ad268b",
+        "size_in_bytes": 316560
+      },
+      {
+        "_path": "lib/pkgconfig/charls.pc",
+        "file_mode": "text",
+        "path_type": "hardlink",
+        "prefix_placeholder": "/Users/ktietz/demo/mc3/conda-bld/charls_1628861255875/_h_env_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_plac",
+        "sha256": "964d13b473577e220f80bf65c99380829b397e94a8fc5d15d2bf5c4cbffcef90",
+        "sha256_in_prefix": "88a140d6087e6ad7b8a426ecc34763c89449a11fde1facd48764a6b6d4128d4b",
+        "size_in_bytes": 533
+      }
+    ],
+    "paths_version": 1
+  },
+  "requested_spec": "None",
+  "sha256": "3fc38e533238e1272e33a4e24a3259516f5a06797faeca1b99f6fd079104d563",
+  "size": 75881,
+  "subdir": "osx-arm64",
+  "timestamp": 1628861281402,
+  "url": "https://repo.anaconda.com/pkgs/main/osx-arm64/charls-2.2.0-hc377ac9_0.conda",
+  "version": "2.2.0"
+}

@@ -1,0 +1,100 @@
+{
+  "build": "h80987f9_0",
+  "build_number": 0,
+  "channel": "https://repo.anaconda.com/pkgs/main/osx-arm64",
+  "constrains": [],
+  "depends": [
+    "aom >=3.6.0,<3.7.0a0",
+    "dav1d >=1.2.1,<1.2.2.0a0"
+  ],
+  "extracted_package_dir": "/Users/sunechristiansen/anaconda3/pkgs/libavif-0.11.1-h80987f9_0",
+  "files": [
+    "include/avif/avif.h",
+    "lib/cmake/libavif/libavif-config-release.cmake",
+    "lib/cmake/libavif/libavif-config-version.cmake",
+    "lib/cmake/libavif/libavif-config.cmake",
+    "lib/libavif.15.0.1.dylib",
+    "lib/libavif.15.dylib",
+    "lib/libavif.dylib",
+    "lib/pkgconfig/libavif.pc"
+  ],
+  "fn": "libavif-0.11.1-h80987f9_0.conda",
+  "legacy_bz2_md5": "bfd3a5c3793bce213c83bd8b1b837fe8",
+  "license": "BSD-2-Clause",
+  "license_family": "BSD",
+  "link": {
+    "source": "/Users/sunechristiansen/anaconda3/pkgs/libavif-0.11.1-h80987f9_0",
+    "type": 1
+  },
+  "md5": "ee4168ac04387a5ceb63d76df4e33715",
+  "name": "libavif",
+  "package_tarball_full_path": "/Users/sunechristiansen/anaconda3/pkgs/libavif-0.11.1-h80987f9_0.conda",
+  "paths_data": {
+    "paths": [
+      {
+        "_path": "include/avif/avif.h",
+        "path_type": "hardlink",
+        "sha256": "b2c7eacb10f0dc416520ef29f6543aea4a3523e009a2d70a68206113eadf71ca",
+        "sha256_in_prefix": "b2c7eacb10f0dc416520ef29f6543aea4a3523e009a2d70a68206113eadf71ca",
+        "size_in_bytes": 53076
+      },
+      {
+        "_path": "lib/cmake/libavif/libavif-config-release.cmake",
+        "path_type": "hardlink",
+        "sha256": "5be57d6645ed090c279c84912479e31d7663761f7767c643f7008188924d16da",
+        "sha256_in_prefix": "5be57d6645ed090c279c84912479e31d7663761f7767c643f7008188924d16da",
+        "size_in_bytes": 813
+      },
+      {
+        "_path": "lib/cmake/libavif/libavif-config-version.cmake",
+        "path_type": "hardlink",
+        "sha256": "31a56a7e67bf7471f7c91d3f293ccf64a8bee1f29edff96b889aa6c4205e26d8",
+        "sha256_in_prefix": "31a56a7e67bf7471f7c91d3f293ccf64a8bee1f29edff96b889aa6c4205e26d8",
+        "size_in_bytes": 2765
+      },
+      {
+        "_path": "lib/cmake/libavif/libavif-config.cmake",
+        "path_type": "hardlink",
+        "sha256": "072c95957c3fae92f073a8c8edc39c1b3fd16c01712421d495c3afede17b8c8d",
+        "sha256_in_prefix": "072c95957c3fae92f073a8c8edc39c1b3fd16c01712421d495c3afede17b8c8d",
+        "size_in_bytes": 3902
+      },
+      {
+        "_path": "lib/libavif.15.0.1.dylib",
+        "path_type": "hardlink",
+        "sha256": "c7c93291ddad1c9e24b23f0d5fc30449d7a39d2287d0983481e35e5e01ed1da9",
+        "sha256_in_prefix": "c7c93291ddad1c9e24b23f0d5fc30449d7a39d2287d0983481e35e5e01ed1da9",
+        "size_in_bytes": 180832
+      },
+      {
+        "_path": "lib/libavif.15.dylib",
+        "path_type": "softlink",
+        "sha256": "c7c93291ddad1c9e24b23f0d5fc30449d7a39d2287d0983481e35e5e01ed1da9",
+        "size_in_bytes": 180832
+      },
+      {
+        "_path": "lib/libavif.dylib",
+        "path_type": "softlink",
+        "sha256": "c7c93291ddad1c9e24b23f0d5fc30449d7a39d2287d0983481e35e5e01ed1da9",
+        "size_in_bytes": 180832
+      },
+      {
+        "_path": "lib/pkgconfig/libavif.pc",
+        "file_mode": "text",
+        "path_type": "hardlink",
+        "prefix_placeholder": "/var/folders/nz/j6p8yfhx1mv_0grj5xl4650h0000gp/T/abs_dcyr2jsv3v/croot/libavif_1689158098609/_h_env_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placeh",
+        "sha256": "302f2153b83fdd607da935f3900c925064acdaa5f4b6947a5e77bbe0ab73f080",
+        "sha256_in_prefix": "cc08d7383faf39f3378b09f078c875b9e5721745af6606f4a901735eb6e87d84",
+        "size_in_bytes": 1223
+      }
+    ],
+    "paths_version": 1
+  },
+  "requested_spec": "None",
+  "sha256": "a899b233eb0f034c23b2124dbccee3162f482c70c283f377eb88f1e2cb8645cd",
+  "size": 98265,
+  "subdir": "osx-arm64",
+  "timestamp": 1689158136997,
+  "url": "https://repo.anaconda.com/pkgs/main/osx-arm64/libavif-0.11.1-h80987f9_0.conda",
+  "version": "0.11.1"
+}

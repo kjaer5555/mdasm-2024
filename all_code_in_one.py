@@ -12,8 +12,8 @@ from sklearn.cluster import KMeans
 import numpy as np
 from scipy.spatial.distance import cityblock
 
-directory = "mdasm-2024/pictures/"
-directory_mask = "mdasm-2024/groupR_masks/"
+directory = "pictures/"
+directory_mask = "groupR_masks/"
 pictures = os.listdir(directory)
 picturestures_mask = os.listdir(directory_mask)
 nameOfPictures = []
@@ -29,7 +29,7 @@ blue_presence=[]
 pink_presence=[]
 black_presence=[]
 
-blue_white_vail=[]
+blue_white_veil=[]
 
 def is_darker(color1, color2):
     """ Input: Two combinations of rgb values
@@ -207,13 +207,13 @@ for x in range(len(pictures)):
     saturation_values.append(statistics.stdev(s_pic)**2)
     value_values.append(statistics.stdev(v_pic)**2)
 
-    blue_white_vail.append(is_bwv())
+    blue_white_veil.append(is_bwv(cropped_lesion))
     
 
 
 df_features = pd.DataFrame()
 
-df_features['Name_Of_Pictures'] = nameOfPictures
+df_features['Name_Of_Picture'] = nameOfPictures
 df_features['H_value'] = hue_values
 df_features['S_value'] = saturation_values
 df_features['V_value'] = value_values
@@ -223,6 +223,7 @@ df_features['blue_presence'] =blue_presence
 df_features['pink_presence'] =pink_presence
 df_features['black_presence'] =black_presence
 df_features['atypicturesal'] = atypical_pigmentation_network
+df_features['blue-whiteveils'] = blue_white_veil
 
 
 
@@ -231,28 +232,26 @@ path_diagnostics_data = 'image_ids_groups.csv'
 df_img_diadnostics = pd.read_csv(path_diagnostics_data)
 
 
-i = 0
-j = 0
-
+# Assuming df_var and df_img are defined with appropriate data
 diagnostic = []
 cancer = []
 
+# Create a dictionary from df_img for quick lookup
+img_dict = {img_id: diag for img_id, diag in zip(df_img_diadnostics['img_id'], df_img_diadnostics['diagnostic'])}
 
-
-while j <= (len(df_features['Name_Of_Pictures'])-1):
-    i = 0
-    for x in range(len(df_img_diadnostics['img_id'])):
-        if df_img_diadnostics['img_id'][i] == df_features['Name_Of_Pictures'][j]+'.png':
-            #print(df_img_diadnostics['diagnostic'][j], df_img_diadnostics['img_id'][i])
-            diagnostic.append(df_img_diadnostics['diagnostic'][j])
-            if df_img_diadnostics['diagnostic'][j] == 'BCC' or df_img_diadnostics['diagnostic'][j] == 'MEL' or df_img_diadnostics['diagnostic'][j] == 'SCC':
-                cancer.append(1)
-            else:
-                cancer.append(0)
-            i += 1
-            j += 1
+for name in df_features['Name_Of_Picture']:
+    img_name = name + '.png'
+    if img_name in img_dict:
+        diag = img_dict[img_name]
+        diagnostic.append(diag)
+        if diag in ['BCC', 'MEL', 'SCC']:
+            cancer.append(1)
         else:
-            i += 1
+            cancer.append(0)
+    else:
+        # Handling cases where there is no match found
+        diagnostic.append('Unknown')
+        cancer.append(0)  # or np.nan to represent missing data if appropriate
         
 df_features['diagnostic'] = diagnostic
 df_features['cancer_or_not'] = cancer
@@ -261,4 +260,4 @@ df_features['cancer_or_not'] = cancer
 
 
 
-df_features.to_csv('features1.csv')
+df_features.to_csv('features.csv')

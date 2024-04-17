@@ -1,0 +1,5 @@
+#!/Users/sunechristiansen/sune/ds_project/mdasm-2024/.env/bin/python3.10
+
+import pydoc
+if __name__ == '__main__':
+    pydoc.cli()

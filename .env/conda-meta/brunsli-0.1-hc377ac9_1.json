@@ -1,0 +1,140 @@
+{
+  "build": "hc377ac9_1",
+  "build_number": 1,
+  "channel": "https://repo.anaconda.com/pkgs/main/osx-arm64",
+  "constrains": [],
+  "depends": [
+    "brotli >=1.0.7,<1.1.0a0",
+    "libcxx >=12.0.0"
+  ],
+  "extracted_package_dir": "/Users/sunechristiansen/anaconda3/pkgs/brunsli-0.1-hc377ac9_1",
+  "files": [
+    "bin/cbrunsli",
+    "bin/dbrunsli",
+    "include/brunsli/brunsli_decode.h",
+    "include/brunsli/brunsli_encode.h",
+    "include/brunsli/decode.h",
+    "include/brunsli/encode.h",
+    "include/brunsli/jpeg_data.h",
+    "include/brunsli/jpeg_data_reader.h",
+    "include/brunsli/jpeg_data_writer.h",
+    "include/brunsli/status.h",
+    "include/brunsli/types.h",
+    "lib/libbrunslidec-c.dylib",
+    "lib/libbrunslienc-c.dylib"
+  ],
+  "fn": "brunsli-0.1-hc377ac9_1.conda",
+  "legacy_bz2_md5": "0034c14344b0f61079b867bd32835beb",
+  "license": "MIT",
+  "license_family": "MIT",
+  "link": {
+    "source": "/Users/sunechristiansen/anaconda3/pkgs/brunsli-0.1-hc377ac9_1",
+    "type": 1
+  },
+  "md5": "7491807d32fbc4e842e5dcdaeb74a76b",
+  "name": "brunsli",
+  "package_tarball_full_path": "/Users/sunechristiansen/anaconda3/pkgs/brunsli-0.1-hc377ac9_1.conda",
+  "paths_data": {
+    "paths": [
+      {
+        "_path": "bin/cbrunsli",
+        "path_type": "hardlink",
+        "sha256": "d469d89fdcc13b1cd33a55f4619195b16775c9c1ffe50984e2e972bf912cf062",
+        "sha256_in_prefix": "d469d89fdcc13b1cd33a55f4619195b16775c9c1ffe50984e2e972bf912cf062",
+        "size_in_bytes": 211824
+      },
+      {
+        "_path": "bin/dbrunsli",
+        "path_type": "hardlink",
+        "sha256": "b678bfaf68d1cd07665eb64adf5d9ba6013f5de4eafed250691777f3fca01c8b",
+        "sha256_in_prefix": "b678bfaf68d1cd07665eb64adf5d9ba6013f5de4eafed250691777f3fca01c8b",
+        "size_in_bytes": 167184
+      },
+      {
+        "_path": "include/brunsli/brunsli_decode.h",
+        "path_type": "hardlink",
+        "sha256": "749bf1d0d103ba81d3932bd91bb548920e660e3bd305fe9d4793f5ddcb7420d5",
+        "sha256_in_prefix": "749bf1d0d103ba81d3932bd91bb548920e660e3bd305fe9d4793f5ddcb7420d5",
+        "size_in_bytes": 1337
+      },
+      {
+        "_path": "include/brunsli/brunsli_encode.h",
+        "path_type": "hardlink",
+        "sha256": "409fb0528d9b53baac029eb5ef5b685724d103f1b5a2467d826853aa811e809f",
+        "sha256_in_prefix": "409fb0528d9b53baac029eb5ef5b685724d103f1b5a2467d826853aa811e809f",
+        "size_in_bytes": 1398
+      },
+      {
+        "_path": "include/brunsli/decode.h",
+        "path_type": "hardlink",
+        "sha256": "21d7773ca7dd2a825ab546deca0a080810de0978ac63e226424dcfa08711c0a7",
+        "sha256_in_prefix": "21d7773ca7dd2a825ab546deca0a080810de0978ac63e226424dcfa08711c0a7",
+        "size_in_bytes": 1020
+      },
+      {
+        "_path": "include/brunsli/encode.h",
+        "path_type": "hardlink",
+        "sha256": "bc9bebeaaa49b3e9bed357779a953d8b3735bf82f6db54db9f6b1a94755da24d",
+        "sha256_in_prefix": "bc9bebeaaa49b3e9bed357779a953d8b3735bf82f6db54db9f6b1a94755da24d",
+        "size_in_bytes": 923
+      },
+      {
+        "_path": "include/brunsli/jpeg_data.h",
+        "path_type": "hardlink",
+        "sha256": "ecf63ab2c7382aaf9d0cf261038d29f05d679c13b6a1c94eee74acf056776d51",
+        "sha256_in_prefix": "ecf63ab2c7382aaf9d0cf261038d29f05d679c13b6a1c94eee74acf056776d51",
+        "size_in_bytes": 9169
+      },
+      {
+        "_path": "include/brunsli/jpeg_data_reader.h",
+        "path_type": "hardlink",
+        "sha256": "2372273335b85f86b22f2077d37943fb279deffc21ebbcf200e78f6c0877cbbc",
+        "sha256_in_prefix": "2372273335b85f86b22f2077d37943fb279deffc21ebbcf200e78f6c0877cbbc",
+        "size_in_bytes": 1043
+      },
+      {
+        "_path": "include/brunsli/jpeg_data_writer.h",
+        "path_type": "hardlink",
+        "sha256": "167d3e9ff82831e9b30ab7e5ee5a6c9d6f0be1928772efb303a58b52245a7444",
+        "sha256_in_prefix": "167d3e9ff82831e9b30ab7e5ee5a6c9d6f0be1928772efb303a58b52245a7444",
+        "size_in_bytes": 1028
+      },
+      {
+        "_path": "include/brunsli/status.h",
+        "path_type": "hardlink",
+        "sha256": "822cfc69b0c3f41bbb5e205cd777a902fb913d309e8dc5542326745a4fba1144",
+        "sha256_in_prefix": "822cfc69b0c3f41bbb5e205cd777a902fb913d309e8dc5542326745a4fba1144",
+        "size_in_bytes": 822
+      },
+      {
+        "_path": "include/brunsli/types.h",
+        "path_type": "hardlink",
+        "sha256": "e4c9346b9c4470e16e2e640c8dce980a0d1ee3ad033fded9af96829235e68586",
+        "sha256_in_prefix": "e4c9346b9c4470e16e2e640c8dce980a0d1ee3ad033fded9af96829235e68586",
+        "size_in_bytes": 705
+      },
+      {
+        "_path": "lib/libbrunslidec-c.dylib",
+        "path_type": "hardlink",
+        "sha256": "a56c0131c649ac2f1dfe04d2d5544eb03ba0c1fdf56ee17dfec9fd8b5a812774",
+        "sha256_in_prefix": "a56c0131c649ac2f1dfe04d2d5544eb03ba0c1fdf56ee17dfec9fd8b5a812774",
+        "size_in_bytes": 148448
+      },
+      {
+        "_path": "lib/libbrunslienc-c.dylib",
+        "path_type": "hardlink",
+        "sha256": "8be95a9cdce3e824da7a61f15b192649afe99ffa6b9aafec74d433dfd2a8e5e0",
+        "sha256_in_prefix": "8be95a9cdce3e824da7a61f15b192649afe99ffa6b9aafec74d433dfd2a8e5e0",
+        "size_in_bytes": 210048
+      }
+    ],
+    "paths_version": 1
+  },
+  "requested_spec": "None",
+  "sha256": "1451d67e14667eefc500802453cd5dbc3ed48f9f9dda8568a599cf0aaf4cebb9",
+  "size": 136837,
+  "subdir": "osx-arm64",
+  "timestamp": 1628860668184,
+  "url": "https://repo.anaconda.com/pkgs/main/osx-arm64/brunsli-0.1-hc377ac9_1.conda",
+  "version": "0.1"
+}
