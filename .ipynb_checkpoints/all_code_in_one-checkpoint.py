@@ -11,6 +11,7 @@ import matplotlib.pyplot as plt
 from sklearn.cluster import KMeans
 import numpy as np
 from scipy.spatial.distance import cityblock
+from skimage.transform import resize, rotate
 
 directory = "pictures/"
 directory_mask = "groupR_masks/"
@@ -20,6 +21,7 @@ nameOfPictures = []
 hue_values = []
 saturation_values = []
 value_values = []
+asymmetry_values = []
 
 atypical_pigmentation_network = []
 
@@ -40,6 +42,68 @@ def is_darker(color1, color2):
     
     # Compare grayscale values
     return gray1 < gray2
+
+
+def get_cropped(img, padding=0):
+    """Crops the image to bounding boxes with given padding."""
+    # Find coordinates of non-zero pixels
+    cords = np.where(img != 0)
+    # Determine the bounds of the non-zero pixels
+    x_min, x_max = np.min(cords[0]), np.max(cords[0])
+    y_min, y_max = np.min(cords[1]), np.max(cords[1])
+    # Apply padding, ensuring we do not go out of image bounds
+    x_min = max(x_min - padding, 0)
+    x_max = min(x_max + padding, img.shape[0] - 1)
+    y_min = max(y_min - padding, 0)
+    y_max = min(y_max + padding, img.shape[1] - 1)
+    # Crop the image
+    cropped_img = img[x_min:x_max+1, y_min:y_max+1]
+    return cropped_img
+
+
+# PLEASE try other version of the asymetry from the asymmetry.ipynb, there are 4 at least. Check which yields
+# highest predicitve value.
+def asymmetry_classic(img):
+    """ Finds major axis using minimum bounding box methods and return combined overlap percentage"""
+    initial_bounding_box = get_cropped(img, padding=0)
+    # Lexographic order
+
+    
+    min_bounding_box = initial_bounding_box
+    min_bounding_box_size = np.size(initial_bounding_box)
+    i=0
+    total_area = np.sum(initial_bounding_box)
+    #print(min_bounding_box_size)
+    
+    for angle in range(0, 180, 1):
+        
+        rotated_mask = rotate(initial_bounding_box, angle, resize=True)
+        bounding_box = get_cropped(rotated_mask, padding=0)
+        bounding_box_size = np.size(bounding_box)
+        #print(f'step {i} size {bounding_box_size} angle {angle}')
+        i+=1
+        if(min_bounding_box_size > bounding_box_size):
+            min_bounding_box_size = bounding_box_size
+            min_bounding_box = bounding_box
+            #print(f'hit')
+    
+    if (min_bounding_box.shape[0] > min_bounding_box.shape[1]):
+    # Use vertical axis as symmetry axis
+        middle_column = min_bounding_box.shape[1] // 2
+        left_half = min_bounding_box[:, :middle_column]
+        flipped_right_half = np.fliplr(min_bounding_box[:, -middle_column:])
+        overlap = left_half * flipped_right_half
+    else:
+    # Use horizontal axis as symmetry axis
+        middle_row = min_bounding_box.shape[0] // 2  
+        top_half = min_bounding_box[:middle_row, :]
+        flipped_bottom_half = np.flipud(min_bounding_box[-middle_row:, :])  
+        overlap = top_half * flipped_bottom_half
+    
+    overlapping_area = np.sum(overlap)
+    score = (2*overlapping_area / total_area)
+    
+    return score
 
 def get_apn_score(cropped_lesion, cropped_lesion_mask ):
     """ Input: Croped version of the image and its mask that contains the major area of the lesion. 
@@ -184,6 +248,7 @@ for x in range(len(pictures)):
 
     apn_score = get_apn_score(cropped_lesion, cropped_lesion_mask) 
     atypical_pigmentation_network.append(apn_score)
+    asymmetry_values.append(asymmetry_classic(cropped_lesion_mask))
 
     # Calculate the mean color for each segment
     segment_means = []
