@@ -241,7 +241,7 @@ def is_bwv(cropped_lesion):
     return  bin_score
      
  
-i = 0
+i = 1
 for x in range(len(pictures)): #loop through all pictures in the database and extract their features
     if os.path.exists(directory_mask+pictures[x].split(".")[0]+'_mask'+".png"):
         rgb_img = plt.imread(directory+pictures[x])[:,:,:3]
