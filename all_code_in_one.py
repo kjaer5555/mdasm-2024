@@ -149,36 +149,45 @@ def color_extraction(segments_mean_in_hsv):
         and their relative presence in the lesion is calculated. 
         Output: Relative presence of each major color found in lesions
     """
-    colors_bins=[0,0,0,0,0,0,0,0,0,0,0]
+    colors_bins=[0,0,0,0,0,0,0,0,0,0,0,0,0,0]
     colors=[[355, 83, 93], #red(pantone)
          [5, 93, 100], #some other red
          [30, 100, 59], #brown
          [209, 24, 44], #black coral
-         [210, 50, 80],  #some blue-gray
+         [210, 50, 80],  #blue-gray(crayola)
          [329,49,97], #persian pink
          [350,25,100], #pink
          [346,42,97], #sherbet pink
          [354,89,61], #ruby red
-         [20,56,69]] #brown sugar
-         #[24,49,24]] #bistre - dark brown
+         [20,56,69], #brown sugar
+         [24,49,24], #bistre - dark brown
+         [50,48,99], # yellow(crayola)
+         [0,2,76]] #snow
     multip=np.array([360,100,100])
     #finishing part of the rgb to hsv conversion
     segments_mean_in_hsv_scaled = segments_mean_in_hsv*multip
     for i in segments_mean_in_hsv_scaled:
-        distance_color=[0,0,0,0,0,0,0,0,0,0]
-        #if the v value of HSV is below 25, then it is black and goes to bin 5
+        distance_color=[0,0,0,0,0,0,0,0,0,0,0,0,0]
+        #if the V value of HSV is below 25, then it is black and goes to bin 13
         if int(i[2])<=25:
-            colors_bins[10]+=1
+            colors_bins[13]+=1
         else:
             for j in enumerate(colors):
-                #Calculate the Manhattans distance between the current pixel and the defined colors
+                #Calculate the Manhattan's distance between the current pixel and the defined colors
                 distance_color[j[0]]=cityblock(i, j[1])
+            #Find which of the calculated distances is the shortest
             smallest_dist=min(distance_color)
+            #Increase the number of pixels in the corresponding bin by 1
             for k in enumerate(distance_color):
                 if k[1]==smallest_dist:
                     colors_bins[k[0]]+=1
-      
-    color_bins_new=[colors_bins[0]+colors_bins[1]+colors_bins[8], colors_bins[2]+colors_bins[9], colors_bins[3]+colors_bins[4], colors_bins[5]+colors_bins[6]+colors_bins[7], colors_bins[10]] #color reassignment
+    #rearrangement rearranging the different shades to the corresponding bin color
+    color_bins_new=[colors_bins[0]+colors_bins[1]+colors_bins[8], #red
+                 colors_bins[2]+colors_bins[9]+colors_bins[10], #brown
+                 colors_bins[3]+colors_bins[4], #blue
+                 colors_bins[5]+colors_bins[6]+colors_bins[7], #pink
+                 colors_bins[13], #black
+                 colors_bins[11]+colors_bins[12]] #white
     color_bins_final=[a_bin/sum(colors_bins) for a_bin in color_bins_new] #relative presence
     return color_bins_final
     
@@ -262,7 +271,10 @@ for x in range(len(pictures)): #loop through all pictures in the database and ex
     max_y = max(lesion_coords[1])
     cropped_lesion = rgb_img[min_x:max_x,min_y:max_y] #cropped section from the original picture
     cropped_lesion_mask=mask[min_x:max_x,min_y:max_y] #cropped section from the original mask
-
+    size=max(max_x-min_x, max_y-min_y) #find the longest height/lenght in pixels
+    multiplier=250/size #create a multiplier which would make the longest distance equal to 250 pixels
+    cropped_lesion=resize(cropped_lesion, (cropped_lesion.shape[0] * multiplier, cropped_lesion.shape[1] * multiplier), anti_aliasing=False)
+    cropped_lesion_mask=resize(cropped_lesion_mask, (cropped_lesion_mask.shape[0] * multiplier, cropped_lesion_mask.shape[1] * multiplier), anti_aliasing=False)
     apn_score = get_apn_score(cropped_lesion, cropped_lesion_mask) 
     atypical_pigment_network.append(apn_score)
     asymmetry_values.append(asymmetry_classic(cropped_lesion_mask))
