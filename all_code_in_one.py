@@ -33,6 +33,7 @@ brown_presence=[]
 blue_presence=[]
 pink_presence=[]
 black_presence=[]
+white_presence=[]
 
 blue_white_veil=[]
 
@@ -207,7 +208,7 @@ def color_variance(segments_mean_in_hsv):
 
     h = list(((np.array(h)*360 + 180)%360)/360) # solution to the misrepresentation of hsv scale
 
-    return statistics.stdev(h)**2,statistics.stdev(s_pic)**2,statistics.stdev(v_pic)**2
+    return statistics.stdev(h)**2,statistics.stdev(s)**2,statistics.stdev(v)**2
 
 def is_bwv(cropped_lesion):
     """ Input: Cropped version of the image.
@@ -297,7 +298,7 @@ for x in range(len(pictures)): #loop through all pictures in the database and ex
     blue_presence.append(colors_presence[2])
     pink_presence.append(colors_presence[3])
     black_presence.append(colors_presence[4])
-    
+    white_presence.append(colors_presence[5])
     h_pic,s_pic,v_pic=color_variance(segments_mean_in_hsv)
     hue_values.append(h_pic)
     saturation_values.append(s_pic)
@@ -317,6 +318,7 @@ df_features['brown_presence'] =brown_presence
 df_features['blue_presence'] =blue_presence
 df_features['pink_presence'] =pink_presence
 df_features['black_presence'] =black_presence
+df_features['white_presence'] =white_presence
 df_features['atypical_pigment_network'] = atypical_pigment_network
 df_features['blue-white_veil'] = blue_white_veil
 
