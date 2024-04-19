@@ -179,7 +179,7 @@ def color_variance(segments_mean_in_hsv):
 
     h = list(((np.array(h)*360 + 180)%360)/360) # solution to the misrepresentation of hsv scale
 
-    return statistics.stdev(h)**2,statistics.stdev(s_pic)**2,statistics.stdev(v_pic)**2
+    return statistics.stdev(h)**2,statistics.stdev(s)**2,statistics.stdev(v)**2
 
 def is_bwv(cropped_lesion):
     """ Input: Cropped version of the image.
