@@ -48,49 +48,28 @@ def is_darker(color1, color2):
     # Compare grayscale values
     return gray1 < gray2
 
-def get_cropped(img, padding=0):
-    """ Input: Original image
-        Output: Reduced to bounding boxes version of the original image with given padding."""
-    # Find coordinates of non-zero pixels
-    cords = np.where(img != 0)
-    # Determine the bounds of the non-zero pixels
-    x_min, x_max = np.min(cords[0]), np.max(cords[0])
-    y_min, y_max = np.min(cords[1]), np.max(cords[1])
-    # Apply padding, ensuring we do not go out of image bounds
-    x_min = max(x_min - padding, 0)
-    x_max = min(x_max + padding, img.shape[0] - 1)
-    y_min = max(y_min - padding, 0)
-    y_max = min(y_max + padding, img.shape[1] - 1)
-    # Crop the image
-    cropped_img = img[x_min:x_max+1, y_min:y_max+1]
-    return cropped_img
+def asymmetry_classic(cropped_lesion_mask):
+    """ Input: Cropped version of the lesion mask.
+        Method: Finds major axis using minimum bounding box methods from multiple angle rotations. 
+        Calculates overlap percentage acording to the minimal axis.
+        Output: Asymetry score of the lesion between 0 (no symetry) and 1 (full symety). """
 
-# PLEASE try other version of the asymetry from the asymmetry.ipynb, there are 4 at least. Check which yields
-# highest predicitve value.
-def asymmetry_classic(img):
-    """ Finds major axis using minimum bounding box methods and return combined overlap percentage"""
-    initial_bounding_box = get_cropped(img, padding=0)
-    # Lexographic order
-
-    
-    min_bounding_box = initial_bounding_box
-    min_bounding_box_size = np.size(initial_bounding_box)
+    min_bounding_box = cropped_lesion_mask
+    min_bounding_box_size = np.size(cropped_lesion_mask)
     i=0
-    total_area = np.sum(initial_bounding_box)
-    #print(min_bounding_box_size)
-    
+    total_area = np.sum(cropped_lesion_mask)
+    #rotate the image and mesure 
     for angle in range(0, 180, 1):
         
-        rotated_mask = rotate(initial_bounding_box, angle, resize=True)
-        bounding_box = get_cropped(rotated_mask, padding=0)
-        bounding_box_size = np.size(bounding_box)
-        #print(f'step {i} size {bounding_box_size} angle {angle}')
+        rotated_mask = rotate(cropped_lesion_mask, angle, resize=True)
+        
+        bounding_box_size = np.size(rotated_mask)
+        
         i+=1
         if(min_bounding_box_size > bounding_box_size):
             min_bounding_box_size = bounding_box_size
-            min_bounding_box = bounding_box
-            #print(f'hit')
-    
+            min_bounding_box = rotated_mask
+           
     if (min_bounding_box.shape[0] > min_bounding_box.shape[1]):
     # Use vertical axis as symmetry axis
         middle_column = min_bounding_box.shape[1] // 2
@@ -102,12 +81,9 @@ def asymmetry_classic(img):
         middle_row = min_bounding_box.shape[0] // 2  
         top_half = min_bounding_box[:middle_row, :]
         flipped_bottom_half = np.flipud(min_bounding_box[-middle_row:, :])  
-        overlap = top_half * flipped_bottom_half
-    
-    overlapping_area = np.sum(overlap)
-    score = (2*overlapping_area / total_area)
-    
-    return score
+        overlap = top_half * flipped_bottom_half 
+
+    return 2* np.sum(overlap)/ total_area
 
 def get_apn_score(cropped_lesion, cropped_lesion_mask ):
     """ Input: Cropped version of the image and its mask that contains the major area of the lesion. 
@@ -246,7 +222,7 @@ def is_bwv(cropped_lesion):
     return  bin_score
      
  
-i = 0
+i = 1
 for x in range(len(pictures)): #loop through all pictures in the database and extract their features
     if os.path.exists(directory_mask+pictures[x].split(".")[0]+'_mask'+".png"):
         rgb_img = plt.imread(directory+pictures[x])[:,:,:3]
