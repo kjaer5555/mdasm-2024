@@ -243,7 +243,11 @@ for x in range(len(pictures)): #loop through all pictures in the database and ex
     max_y = max(lesion_coords[1])
     cropped_lesion = rgb_img[min_x:max_x,min_y:max_y] #cropped section from the original picture
     cropped_lesion_mask=mask[min_x:max_x,min_y:max_y] #cropped section from the original mask
-
+    size=max(max_x-min_x, max_y-min_y) #find the longest height/lenght in pixels
+    multiplier=250/size #create a multiplier which would make the longest distance equal to 250 pixels
+    cropped_lesion=resize(cropped_lesion, (cropped_lesion.shape[0] * multiplier, cropped_lesion.shape[1] * multiplier), anti_aliasing=False)
+    cropped_lesion_mask=resize(cropped_lesion_mask, (cropped_lesion_mask.shape[0] * multiplier, cropped_lesion_mask.shape[1] * multiplier), anti_aliasing=False)
+    
     apn_score = get_apn_score(cropped_lesion, cropped_lesion_mask) 
     atypical_pigment_network.append(apn_score)
     asymmetry_values.append(asymmetry_classic(cropped_lesion_mask))
