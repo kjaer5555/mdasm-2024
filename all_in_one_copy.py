@@ -326,4 +326,4 @@ df_features['diagnostic'] = diagnostic
 df_features['cancer_or_not'] = cancer
 
 #export all data into a file
-df_features.to_csv('features.csv')
+df_features.to_csv('features1.csv')
