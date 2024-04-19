@@ -12,6 +12,7 @@ from sklearn.cluster import KMeans
 import numpy as np
 from scipy.spatial.distance import cityblock
 from skimage.transform import resize, rotate
+import time
 
 # Load image directories
 directory = "pictures/"
@@ -79,7 +80,7 @@ def asymmetry_classic(img):
     total_area = np.sum(initial_bounding_box)
     #print(min_bounding_box_size)
     
-    for angle in range(0, 180, 1):
+    for angle in range(0, 180, 2):
         
         rotated_mask = rotate(initial_bounding_box, angle, resize=True)
         bounding_box = get_cropped(rotated_mask, padding=0)
@@ -217,14 +218,10 @@ def is_bwv(cropped_lesion):
     """
     # Enhance blue channel
     factor = 2.5
-    img_float = cropped_lesion.astype('float')
-    # Scale blue channel
-    img_float[:,:,2] = img_float[:,:,2] * factor
+    cropped_lesion[:,:,2] = cropped_lesion[:,:,2] * factor
     # Clip values to max 255 (for uint8 images)
-    img_float[:,:,2] = np.clip(img_float[:,:,2], 0, 255)
-    # Convert back to original data type
-    cropped_lesion = img_float.astype(cropped_lesion.dtype)
-
+    cropped_lesion[:,:,2] = np.clip(cropped_lesion[:,:,2], 0, 255)
+    
     # define bwv value
     values = {
         "hue_min": 0.55,
@@ -252,12 +249,17 @@ def is_bwv(cropped_lesion):
      
  
 i = 1
+time1=time.time()
 for x in range(len(pictures)): #loop through all pictures in the database and extract their features
     if os.path.exists(directory_mask+pictures[x].split(".")[0]+'_mask'+".png"):
         rgb_img = plt.imread(directory+pictures[x])[:,:,:3]
         mask = plt.imread(directory_mask+pictures[x].split(".")[0]+'_mask'+".png")
-        
-        print(i)
+
+        if i%10==0:
+            print(i)
+            #time2=time.time()
+            #print("{}, {}".format(i,time2-time1))
+            #time1=time.time()
         i += 1
 
     else:
@@ -276,10 +278,26 @@ for x in range(len(pictures)): #loop through all pictures in the database and ex
     multiplier=250/size #create a multiplier which would make the longest distance equal to 250 pixels
     cropped_lesion=resize(cropped_lesion, (cropped_lesion.shape[0] * multiplier, cropped_lesion.shape[1] * multiplier), anti_aliasing=False)
     cropped_lesion_mask=resize(cropped_lesion_mask, (cropped_lesion_mask.shape[0] * multiplier, cropped_lesion_mask.shape[1] * multiplier), anti_aliasing=False)
+    
+    #time1=time.time()
     apn_score = get_apn_score(cropped_lesion, cropped_lesion_mask) 
+    #time2=time.time()
+    #print("apn score took: ",time2-time1)
+    
+    #time1=time.time()
     atypical_pigment_network.append(apn_score)
+    #time2=time.time()
+    #print("atypical pigment network score took: ",time2-time1)
+    
+    #time1=time.time()
     asymmetry_values.append(asymmetry_classic(cropped_lesion_mask))
+    #time2=time.time()
+    #print("asymmetry score took: ",time2-time1)
+    
+    #time1=time.time()
     blue_white_veil.append(is_bwv(cropped_lesion))
+    #time2=time.time()
+    #print("blue white veil score took: ",time2-time1)
 
     # Calculate the mean color for each segment
     segments = slic(cropped_lesion, n_segments=250, compactness=100) #devide image into megapixels
@@ -290,20 +308,32 @@ for x in range(len(pictures)): #loop through all pictures in the database and ex
         segment_mean = segment_pixels.mean(axis=0)
         segment_means.append(segment_mean)
 
+    
     segments_mean_in_hsv = rgb2hsv(np.array(segment_means))
-
+    
+    #time1=time.time()
     colors_presence=color_extraction(segments_mean_in_hsv)
+    #time2=time.time()
+    #print("Color extraction took: ",time2-time1)
+    
+    
     red_presence.append(colors_presence[0])
     brown_presence.append(colors_presence[1])
     blue_presence.append(colors_presence[2])
     pink_presence.append(colors_presence[3])
     black_presence.append(colors_presence[4])
     white_presence.append(colors_presence[5])
+    
+    #time1=time.time()
     h_pic,s_pic,v_pic=color_variance(segments_mean_in_hsv)
+    #time2=time.time()
+    #print("color variance took: ",time2-time1)
+    
     hue_values.append(h_pic)
     saturation_values.append(s_pic)
     value_values.append(v_pic)
-
+    
+    #input()
 
 #Build features database
 df_features = pd.DataFrame()
@@ -354,3 +384,6 @@ df_features['cancer_or_not'] = cancer
 
 #export all data into a file
 df_features.to_csv('features.csv')
+
+time2=time.time()
+print(time2-time1)
