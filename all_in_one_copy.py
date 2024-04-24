@@ -12,10 +12,11 @@ from sklearn.cluster import KMeans
 import numpy as np
 from scipy.spatial.distance import cityblock
 from skimage.transform import resize, rotate
+import math
 
 # Load image directories
-directory = "pictures/"
-directory_mask = "groupR_masks/"
+directory = "images/"
+directory_mask = "masks/"
 pictures = os.listdir(directory)
 picturestures_mask = os.listdir(directory_mask)
 
@@ -47,6 +48,34 @@ def is_darker(color1, color2):
     
     # Compare grayscale values
     return gray1 < gray2
+
+def asymmetry_score_fully_rotated(img, n_steps: int = 10):
+    """Rotates images step times around axis, and computes overlapping percentage
+    Best score: 1, worst score: 0. Insert cropped image"""
+    if (n_steps <  1 or n_steps > 180):
+        raise Exception('Amount of steps of range [1, 180]')
+
+    #img = get_cropped(img)
+    sum_of_overlapping_areas = 0
+    total_area = np.sum(img)*n_steps
+    step_size = math.ceil(180 / n_steps)
+    
+    for angle in range(0, 180, step_size):
+        
+        rotated_mask = rotate(img, angle, resize=True)
+        # There is no need to crop the image to boundary boxes, 
+        # because the center remains in the middle.
+        middle_column = rotated_mask.shape[1] // 2
+        left_half = rotated_mask[:, :middle_column]
+        flipped_right_half = np.fliplr(rotated_mask[:, -middle_column:])
+        
+        overlap = left_half * flipped_right_half
+        
+        overlapping_area = np.sum(overlap)
+        sum_of_overlapping_areas += overlapping_area
+        
+    score = (2*sum_of_overlapping_areas / total_area) # need to account for both halves
+    return score
 
 def asymmetry_classic(cropped_lesion_mask):
     """ Input: Cropped version of the lesion mask.
@@ -250,7 +279,7 @@ for x in range(len(pictures)): #loop through all pictures in the database and ex
     
     apn_score = get_apn_score(cropped_lesion, cropped_lesion_mask) 
     atypical_pigment_network.append(apn_score)
-    asymmetry_values.append(asymmetry_classic(cropped_lesion_mask))
+    asymmetry_values.append(asymmetry_score_fully_rotated(cropped_lesion_mask))
     blue_white_veil.append(is_bwv(cropped_lesion))
 
     # Calculate the mean color for each segment
@@ -326,4 +355,4 @@ df_features['diagnostic'] = diagnostic
 df_features['cancer_or_not'] = cancer
 
 #export all data into a file
-df_features.to_csv('features1.csv')
+df_features.to_csv('features_asymmetry_score_fully_rotated_full.csv')
