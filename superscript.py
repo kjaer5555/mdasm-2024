@@ -1,6 +1,6 @@
 import numpy as np
 import pickle
-from sklearn.preprocessing import StandardScaler
+#from sklearn.preprocessing import StandardScaler
 #from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
 #from sklearn.feature_selection import RFE
@@ -21,8 +21,6 @@ feature_columns= ['H_value', 'S_value', 'V_value', 'red_presence', 'brown_presen
 X = data[feature_columns]
 y = data['cancer_or_not']
 
-scaler = StandardScaler()
-X_scaled_test_data = scaler.fit_transform(X)
 
 rf_cv_scores = [] # creating list of cv scores
 rf_ds_list=list(range(1,25)) # creating list of depths for rf
@@ -37,7 +35,7 @@ for tree_n in rf_nt:
     for d in rf_ds_list:
        
         rf_classifier = RandomForestClassifier(n_estimators=tree_n, max_depth=d, bootstrap=True)
-        scores = cross_val_score(rf_classifier, X_scaled_test_data, y, cv=5, scoring='accuracy') #perform cv
+        scores = cross_val_score(rf_classifier, X, y, cv=5, scoring='accuracy') #perform cv
         rf_cv_scores.append(scores.mean())
         if rf_cv_scores[-1]>best_score: #find best score parameters
             best_score=rf_cv_scores[-1]
@@ -59,7 +57,7 @@ print(values)
 #print(max_tree)
 #train model with best found parameters and save it
 #final_tree=RandomForestClassifier(n_estimators=1000, max_depth=best_rf_depth, bootstrap=True)
-#final_tree.fit(X_scaled_test_data, y)
+#final_tree.fit(X, y)
 
 #with open(f'depth{best_rf_depth}_tree.pkl', 'wb') as f:
  #   pickle.dump(final_tree, f)
