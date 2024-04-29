@@ -10,6 +10,24 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from sklearn.model_selection import cross_val_score
 import sys
+import csv
+
+class Tree:
+    def __init__(self,n):
+        self.n_trees = n
+        self.depth_dict = dict()
+        self.max_score=0
+        self.max_depth=0
+        
+    def test_depth(self,d,X_scaled_test_data,y):
+        print("number of trees: "+str(self.n_trees)+"\tdepth: "+str(d))
+        rf_classifier = RandomForestClassifier(n_estimators=self.n_trees, max_depth=d, bootstrap=True)
+        scores = cross_val_score(rf_classifier, X_scaled_test_data, y, cv=5, scoring='accuracy') #perform cv
+        self.depth_dict[scores.mean()]=d
+    def get_best_score(self):
+        self.max_score = max(self.depth_dict.keys())
+        self.max_depth = self.depth_dict[self.max_score]
+        return self.max_score
 
 if len(sys.argv)>1:
     sti_features = sys.argv[1]
@@ -29,34 +47,13 @@ scaler = StandardScaler()
 X_scaled_test_data = scaler.fit_transform(X)
 
 rf_cv_scores = [] # creating list of cv scores
-rf_ds_list=list(range(1,15)) # creating list of depths for rf
+rf_ds_list=list(range(1,16)) # creating list of depths for rf
 best_rf_depth=0  # best depth found after cv
 
-rf_nt=list(range(500, 5000, 500))
-best_score=0
-tree_depth=dict()
-depth_score=dict()
-for tree_n in rf_nt:
-    depth_dict = dict() 
-    for d in rf_ds_list:
-        print("number of trees: "+str(tree_n)+"\tdepth: "+str(d))
-        rf_classifier = RandomForestClassifier(n_estimators=tree_n, max_depth=d, bootstrap=True)
-        scores = cross_val_score(rf_classifier, X_scaled_test_data, y, cv=5, scoring='accuracy') #perform cv
-        rf_cv_scores.append(scores.mean())
-        if rf_cv_scores[-1]>best_score: #find best score parameters
-            best_score=rf_cv_scores[-1]
-            best_rf_depth=d
-        depth_dict[best_score]=best_rf_depth
-    max_score=max(depth_dict.keys())
-    max_depth=depth_dict[max_score]
-    tree_depth[max_depth]=tree_n
-    depth_score[max_score]=max_depth
+tree = Tree(4500)
+for k in rf_ds_list:
+    tree.test_depth(k,X_scaled_test_data,y)
+with open("best_tree_extract.csv","w+") as file:
+    for key,value in tree.depth_dict.items():
+        file.write(str(key)+", "+str(value)+"\n")
 
-max_score=max(depth_score.keys())
-max_depth=depth_score[max_score]
-max_tree=tree_depth[max_depth]
-
-values=[max_tree,max_depth,max_score]
-print()
-print("[number of trees, depth, accuracy] = ",end='')
-print(values)
