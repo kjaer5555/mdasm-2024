@@ -16,6 +16,7 @@ class Tree:
     def __init__(self,n):
         self.n_trees = n
         self.depth_dict = dict()
+        self.std_dict = dict()
         self.max_score=0
         self.max_depth=0
         
@@ -23,6 +24,7 @@ class Tree:
         print("number of trees: "+str(self.n_trees)+"\tdepth: "+str(d))
         rf_classifier = RandomForestClassifier(n_estimators=self.n_trees, max_depth=d, bootstrap=True)
         scores = cross_val_score(rf_classifier, X_scaled_test_data, y, cv=5, scoring='accuracy') #perform cv
+        self.std_dict[d] = np.std(scores)
         self.depth_dict[scores.mean()]=d
     def get_best_score(self):
         self.max_score = max(self.depth_dict.keys())
@@ -47,7 +49,7 @@ scaler = StandardScaler()
 X_scaled_test_data = scaler.fit_transform(X)
 
 rf_cv_scores = [] # creating list of cv scores
-rf_ds_list=list(range(1,16)) # creating list of depths for rf
+rf_ds_list=list(range(1,4)) # creating list of depths for rf
 best_rf_depth=0  # best depth found after cv
 
 tree = Tree(4500)
@@ -55,5 +57,5 @@ for k in rf_ds_list:
     tree.test_depth(k,X_scaled_test_data,y)
 with open("best_tree_extract.csv","w+") as file:
     for key,value in tree.depth_dict.items():
-        file.write(str(key)+", "+str(value)+"\n")
+        file.write(str(key)+", "+str(value)+", "+str(tree.std_dict[value])+"\n")
 
