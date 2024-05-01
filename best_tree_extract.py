@@ -50,7 +50,7 @@ class Tree:
 if len(sys.argv)>1:
     sti_features = sys.argv[1]
 else:
-    sti_features = 'train_data.csv'
+    sti_features = 'train_75_people_data.csv'
 #sti_features ='features_optimized_1.csv'
 #sti_features ='features_optimized_2.csv'
 #sti_features ='features_optimized_3.csv'
