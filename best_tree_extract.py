@@ -8,25 +8,43 @@ from sklearn.ensemble import RandomForestClassifier
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
-from sklearn.model_selection import cross_val_score
+from sklearn.model_selection import cross_val_score, cross_validate
 import sys
 import csv
 
 class Tree:
     def __init__(self,n):
         self.n_trees = n
-        self.depth_dict = dict()
+        self.acc_dict = dict()
+        self.rec_dict = dict()
+        self.pre_dict = dict()
+        self.f1_dict = dict()
+        self.std_dict = dict()
         self.max_score=0
         self.max_depth=0
         
     def test_depth(self,d,X_scaled_test_data,y):
         print("number of trees: "+str(self.n_trees)+"\tdepth: "+str(d))
         rf_classifier = RandomForestClassifier(n_estimators=self.n_trees, max_depth=d, bootstrap=True)
-        scores = cross_val_score(rf_classifier, X_scaled_test_data, y, cv=5, scoring='accuracy') #perform cv
-        self.depth_dict[scores.mean()]=d
-    def get_best_score(self):
-        self.max_score = max(self.depth_dict.keys())
-        self.max_depth = self.depth_dict[self.max_score]
+        scoring = {'acc': 'accuracy',
+           'rec': 'recall',
+           'prec': 'precision',
+           'f1_score':'f1'}
+        scores = cross_validate(rf_classifier,X_scaled_test_data, y,cv=5, scoring=scoring)
+        accuracy=scores['test_acc']
+        recall=scores['test_rec']
+        precision=scores['test_prec']
+        f1_sore = scores['test_f1_score']
+        #scores = cross_val_score(rf_classifier, X_scaled_test_data, y, cv=5, scoring='accuracy') #perform cv
+        self.std_dict[d] = np.std(accuracy)
+        self.acc_dict[d]=accuracy.mean()
+        self.pre_dict[d]=precision.mean()
+        self.rec_dict[d]=recall.mean()
+        self.f1_dict[d]=f1_sore.mean()
+        
+    def get_best_acc(self):
+        self.max_score = max(self.acc_dict.values())
+        self.max_depth = list(self.acc_dict.keys())[list(self.acc_dict.values()).index(self.max_score)]
         return self.max_score
 
 if len(sys.argv)>1:
@@ -54,6 +72,12 @@ tree = Tree(4500)
 for k in rf_ds_list:
     tree.test_depth(k,X_scaled_test_data,y)
 with open("best_tree_extract.csv","w+") as file:
-    for key,value in tree.depth_dict.items():
-        file.write(str(key)+", "+str(value)+"\n")
+    file.write("depth,accuracy,std_accuracy,recall,precision,f1_score\n")
+    for d in tree.acc_dict.keys():
+        acc=str(tree.acc_dict[d])
+        prec=str(tree.pre_dict[d])
+        rec=str(tree.rec_dict[d])
+        f1=str(tree.f1_dict[d])
+        std=str(tree.std_dict[d])
+        file.write("{},{},{},{},{},{}\n".format(d,acc,std,rec,prec,f1))
 
