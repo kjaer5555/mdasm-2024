@@ -50,8 +50,11 @@ def is_darker(color1, color2):
     return gray1 < gray2
 
 def asymmetry_score_fully_rotated(img, n_steps: int = 10):
-    """Rotates images step times around axis, and computes overlapping percentage
-    Best score: 1, worst score: 0. Insert cropped image"""
+    """ Input: Cropped version of the lesion mask.
+        Method: Rotates images step times around axis, and computes overlapping percentage
+        Best score: 1, worst score: 0.
+    """
+    
     if (n_steps <  1 or n_steps > 180):
         raise Exception('Amount of steps of range [1, 180]')
 
@@ -76,43 +79,6 @@ def asymmetry_score_fully_rotated(img, n_steps: int = 10):
         
     score = (2*sum_of_overlapping_areas / total_area) # need to account for both halves
     return score
-
-def asymmetry_classic(cropped_lesion_mask):
-    """ Input: Cropped version of the lesion mask.
-        Method: Finds major axis using minimum bounding box methods from multiple angle rotations. 
-        Calculates overlap percentage acording to the minimal axis.
-        Output: Asymetry score of the lesion between 0 (no symetry) and 1 (full symety). """
-
-    min_bounding_box = cropped_lesion_mask
-    min_bounding_box_size = np.size(cropped_lesion_mask)
-    i=0
-    total_area = np.sum(cropped_lesion_mask)
-    #rotate the image and mesure 
-    for angle in range(0, 180, 1):
-        
-        rotated_mask = rotate(cropped_lesion_mask, angle, resize=True)
-        
-        bounding_box_size = np.size(rotated_mask)
-        
-        i+=1
-        if(min_bounding_box_size > bounding_box_size):
-            min_bounding_box_size = bounding_box_size
-            min_bounding_box = rotated_mask
-           
-    if (min_bounding_box.shape[0] > min_bounding_box.shape[1]):
-    # Use vertical axis as symmetry axis
-        middle_column = min_bounding_box.shape[1] // 2
-        left_half = min_bounding_box[:, :middle_column]
-        flipped_right_half = np.fliplr(min_bounding_box[:, -middle_column:])
-        overlap = left_half * flipped_right_half
-    else:
-    # Use horizontal axis as symmetry axis
-        middle_row = min_bounding_box.shape[0] // 2  
-        top_half = min_bounding_box[:middle_row, :]
-        flipped_bottom_half = np.flipud(min_bounding_box[-middle_row:, :])  
-        overlap = top_half * flipped_bottom_half 
-
-    return 2* np.sum(overlap)/ total_area
 
 def get_apn_score(cropped_lesion, cropped_lesion_mask ):
     """ Input: Cropped version of the image and its mask that contains the major area of the lesion. 
