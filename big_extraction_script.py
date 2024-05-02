@@ -1,18 +1,16 @@
-import statistics
-from skimage import segmentation, color
-import numpy as np
-from skimage.color import rgb2hsv
-import matplotlib.pyplot as plt
-from skimage.segmentation import slic, mark_boundaries
-import csv
-import os
-import pandas as pd
-import matplotlib.pyplot as plt
-from sklearn.cluster import KMeans
-import numpy as np
-from scipy.spatial.distance import cityblock
-from skimage.transform import resize, rotate
 import math
+import matplotlib.pyplot as plt
+import numpy as np
+import os
+import statistics
+import pandas as pd
+from skimage import segmentation, color
+from skimage.color import rgb2hsv
+from skimage.segmentation import slic, mark_boundaries
+from skimage.transform import resize, rotate
+from sklearn.cluster import KMeans
+from scipy.spatial.distance import cityblock
+
 
 # Load image directories
 directory = "images/"
