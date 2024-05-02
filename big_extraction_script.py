@@ -56,7 +56,6 @@ def asymmetry_score_fully_rotated(img, n_steps: int = 10):
     if (n_steps <  1 or n_steps > 180):
         raise Exception('Amount of steps of range [1, 180]')
 
-    #img = get_cropped(img)
     sum_of_overlapping_areas = 0
     total_area = np.sum(img)*n_steps
     step_size = math.ceil(180 / n_steps)
@@ -120,17 +119,17 @@ def color_extraction(segments_mean_in_hsv):
         Output: Relative presence of each major color found in lesions
     """
     colors_bins=[0,0,0,0,0,0,0,0,0,0,0,0,0,0]
-    colors=[[355, 83, 93], #red(pantone) - ready
-         [5, 93, 100], #some other red - ready
-         [30, 100, 59], #brown - ready
+    colors=[[355, 83, 93], #red(pantone)
+         [5, 93, 100], #red 
+         [30, 100, 59], #brown 
          [209, 24, 44], #black coral
-         [210, 50, 80],  #some blue-gray
-         [329,49,97], #persian pink - ready
-         [350,25,100], #pink - ready
-         [346,42,97], #sherbet pink - ready
-         [354,89,61], #ruby red - ready
-         [20,56,69], #brown sugar - ready
-         [24,49,24], #bistre - dark brown - ready
+         [210, 50, 80],  #blue-gray
+         [329,49,97], #persian pink
+         [350,25,100], #pink
+         [346,42,97], #sherbet pink
+         [354,89,61], #ruby red
+         [20,56,69], #brown sugar
+         [24,49,24], #bistre - dark brown
          [50,48,99], # yellow(crayola)
          [0,2,76]] #white
     multip=np.array([360,100,100])
@@ -138,7 +137,7 @@ def color_extraction(segments_mean_in_hsv):
     segments_mean_in_hsv_scaled = segments_mean_in_hsv*multip
     for i in segments_mean_in_hsv_scaled:
         distance_color=[0,0,0,0,0,0,0,0,0,0,0,0,0]
-        #if the v value of HSV is below 25, then it is black and goes to bin 5
+        #if the v value of HSV is below 25, then it is black and goes to bin 10
         if int(i[2])<=25:
             colors_bins[10]+=1
         else:
@@ -152,8 +151,8 @@ def color_extraction(segments_mean_in_hsv):
       
     color_bins_new=[colors_bins[0]+colors_bins[1]+colors_bins[8], colors_bins[2]+colors_bins[9]+colors_bins[10],
                  colors_bins[3]+colors_bins[4], colors_bins[5]+colors_bins[6]+colors_bins[7], 
-                 colors_bins[13], colors_bins[11]+colors_bins[12]] #color reassignment
-    color_bins_final=[a_bin/sum(colors_bins) for a_bin in color_bins_new] #relative presence
+                 colors_bins[13], colors_bins[11]+colors_bins[12]] #combining different shades of one color into one bin
+    color_bins_final=[a_bin/sum(colors_bins) for a_bin in color_bins_new] #relative presence of each color
     return color_bins_final
     
 def color_variance(segments_mean_in_hsv):
@@ -247,7 +246,7 @@ for x in range(len(pictures)): #loop through all pictures in the database and ex
     blue_white_veil.append(is_bwv(cropped_lesion))
 
     # Calculate the mean color for each segment
-    segments = slic(cropped_lesion, n_segments=250, compactness=100) #devide image into megapixels
+    segments = slic(cropped_lesion, n_segments=250, compactness=100) #divide image into megapixels
     segment_means = []
     for segment_value in np.unique(segments): #calculates the mean color values for each segment in found
         mask_of_segment = segments == segment_value
@@ -279,12 +278,12 @@ df_features['asymmetry_values'] = asymmetry_values
 df_features['H_value'] = hue_values
 df_features['S_value'] = saturation_values
 df_features['V_value'] = value_values
-df_features['red_presence'] =red_presence
-df_features['brown_presence'] =brown_presence
-df_features['blue_presence'] =blue_presence
-df_features['pink_presence'] =pink_presence
-df_features['black_presence'] =black_presence
-df_features['white_presence'] =white_presence
+df_features['red_presence'] = red_presence
+df_features['brown_presence'] = brown_presence
+df_features['blue_presence'] = blue_presence
+df_features['pink_presence'] = pink_presence
+df_features['black_presence'] = black_presence
+df_features['white_presence'] = white_presence
 df_features['atypical_pigment_network'] = atypical_pigment_network
 df_features['blue-white_veil'] = blue_white_veil
 
