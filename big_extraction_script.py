@@ -16,7 +16,6 @@ from scipy.spatial.distance import cityblock
 directory = "images/"
 directory_mask = "masks/"
 pictures = os.listdir(directory)
-picturestures_mask = os.listdir(directory_mask)
 
 #Prepare data holders
 nameOfPictures = []

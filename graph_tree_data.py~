@@ -1,0 +1,21 @@
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+
+file="best_tree_extract.csv"
+df = pd.read_csv(file)
+
+depths = np.array(df["depth"])
+acc = np.array(df["accuracy"])
+std = np.array(df["std_accuracy"])
+prec = np.array(df["precision"])
+recall = np.array(df["recall"])
+f1_score = np.array(df["f1_score"])
+
+
+plt.plot(depths, acc,color="blue")
+plt.plot(depths, prec,color="red")
+plt.plot(depths, recall,color="yellow")
+plt.plot(depths, f1_score,color="green")
+
+plt.show()
