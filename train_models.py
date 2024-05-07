@@ -9,102 +9,57 @@ from sklearn.metrics import confusion_matrix, classification_report
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.metrics import confusion_matrix
-from sklearn.model_selection import cross_validate
-from sklearn.model_selection import GroupShuffleSplit, StratifiedGroupKFold
+from sklearn.model_selection import cross_val_score
+from sklearn.model_selection import GroupShuffleSplit, StratifiedGroupKFold,GroupKFold
 import os
 
 class Models_validator:
     def __init__(self,x,y):
         self.x=x
         self.y=y
-        self.acc_dict_tree = dict()
-        self.rec_dict_tree = dict()
-        self.pre_dict_tree = dict()
-        self.f1_dict_tree = dict()
-        self.std_dict_tree = dict()
-        self.max_score=0
-        self.max_depth=0
-        self.acc_dict_knn = dict()
-        self.rec_dict_knn = dict()
-        self.pre_dict_knn = dict()
-        self.f1_dict_knn = dict()
-        self.acc_dict_logic = dict()
-        self.rec_dict_logic = dict()
-        self.pre_dict_logic = dict()
-        self.f1_dict_logic = dict()
+    def rf_parameters(self,tree_range,depth_range):
+        tree_best_depth=dict()
+        tree_best_accuracy=dict()
+        for t in tree_range:
+            score_depth=dict()
+            for d in depth_range:
+                rf_classifier = RandomForestClassifier(n_estimators=t, max_depth=d, bootstrap=True)
+                scores = cross_val_score(rf_classifier, self.x, self.y, cv=5, scoring='accuracy') #perform cv
+                score_depth[scores.mean()]=d
+            best_accuracy=max(score_depth.keys())
+            
+            tree_best_accuracy[t]=best_accuracy
+            tree_best_depth[t]=score_depth[best_accuracy]
+        index=list(tree_best_accuracy.values()).index(max(tree_best_accuracy.values()))
+        t=list(tree_best_accuracy.keys())[index]
+        return t,tree_best_depth[t]
+    
+    def knn_parameters(self,neighbors_range):
+        score_neighbors=dict()
+        for n in neighbors_range:
+            kn_classifier = KNeighborsClassifier(n_neighbors=n)
+            scores = cross_val_score(kn_classifier, self.x, self.y, cv=5, scoring='accuracy') #perform cv
+            score_neighbors[scores.mean()]=n
         
-    def test_depth(self,trees):
-        rf_ds_range=range(1,16)
-        for d in rf_ds_range:
-            rf_classifier = RandomForestClassifier(n_estimators=trees, max_depth=d, bootstrap=True)
-            scoring = {'acc': 'accuracy',
-            'rec': 'recall',
-            'prec': 'precision',
-            'f1_score':'f1'}
-            scores = cross_validate(rf_classifier,X_scaled_test_data, y,cv=5, scoring=scoring)
-            accuracy=scores['test_acc']
-            recall=scores['test_rec']
-            precision=scores['test_prec']
-            f1_sore = scores['test_f1_score']
-            self.std_dict[d] = np.std(accuracy)
-            self.acc_dict[d]=accuracy.mean()
-            self.pre_dict[d]=precision.mean()
-            self.rec_dict[d]=recall.mean()
-            self.f1_dict[d]=f1_sore.mean()
-        
-    def get_best_acc(self):
-        self.max_score = max(self.acc_dict.values())
-        self.max_depth = list(self.acc_dict.keys())[list(self.acc_dict.values()).index(self.max_score)]
-        return self.max_score
-    def get_best_acc(self):
-        self.max_score = max(self.acc_dict.values())
-        self.max_depth = list(self.acc_dict.keys())[list(self.acc_dict.values()).index(self.max_score)]
-        return self.max_score
-    def get_best_acc(self):
-        self.max_score = max(self.acc_dict.values())
-        self.max_depth = list(self.acc_dict.keys())[list(self.acc_dict.values()).index(self.max_score)]
-        return self.max_score
-
-
-
-rf_cv_scores = [] # creating list of cv scores
-rf_ds_list=list(range(1,16)) # creating list of depths for rf
-best_rf_depth=0  # best depth found after cv
-
-tree = Tree(4500)
-for k in rf_ds_list:
-    tree.test_depth(k,X_scaled_test_data,y)
-with open("best_tree_extract.csv","w+") as file:
-    file.write("depth,accuracy,std_accuracy,recall,precision,f1_score\n")
-    for d in tree.acc_dict.keys():
-        acc=str(tree.acc_dict[d])
-        prec=str(tree.pre_dict[d])
-        rec=str(tree.rec_dict[d])
-        f1=str(tree.f1_dict[d])
-        std=str(tree.std_dict[d])
-        file.write("{},{},{},{},{},{}\n".format(d,acc,std,rec,prec,f1))
-
-
+        return score_neighbors[max(score_neighbors.keys())]
 
 #Where did we store the features?
-file_features = 'features/features.csv'
+file_features = 'train_75_people_data.csv'
 feature_names = ['H_value', 'S_value', 'V_value', 'red_presence', 'brown_presence', 'blue_presence', 'pink_presence', 'white_presence','black_presence','atypical_pigment_network', 'blue-white_veil', 'asymmetry_values']
 
 # Load the features - remember the example features are not informative
 df_features = pd.read_csv(file_features)
-label=df_features['cancer_or_not']
 
 # Make the dataset, you can select different classes (see task 0)
 x = np.array(df_features[feature_names])
-y =  label == '1'   #now True means healthy nevus, False means something else
-patient_id = df['patient_id']
+y =  df_features['cancer_or_not']   #now True means healthy nevus, False means something else
+patient_id = df_features['person_id']
 
 
 #Prepare cross-validation - images from the same patient must always stay together
 num_folds = 5
 group_kfold = GroupKFold(n_splits=num_folds)
 group_kfold.get_n_splits(x, y, patient_id)
-
 scaler = StandardScaler()
 X_scaled_test_data = scaler.fit_transform(x)
 
@@ -113,12 +68,14 @@ rf_ds_list=list(range(1,16)) # creating list of depths for rf
 best_rf_depth=0  # best depth found after cv
 
 model_validator = Models_validator(X_scaled_test_data,y)
-tree.test_depth(4500)
+rf_trees,rf_depth = model_validator.rf_parameters(range(500,1000,500),range(1,2))
+knn_neighbors = model_validator.knn_parameters(range(1,30))
+
 #Different classifiers to test out
 classifiers = [
-    KNeighborsClassifier(27),
+    KNeighborsClassifier(knn_neighbors),
     LogisticRegression(),
-    RandomForestClassifier(n_estimators=4500, max_depth=7, bootstrap=True)
+    RandomForestClassifier(n_estimators=rf_trees, max_depth=rf_depth, bootstrap=True)
 ]
 num_classifiers = len(classifiers)
 
