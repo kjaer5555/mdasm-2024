@@ -21,6 +21,7 @@ class Models_validator:
         tree_best_depth=dict()
         tree_best_accuracy=dict()
         for t in tree_range:
+            print(t)
             score_depth=dict()
             for d in depth_range:
                 rf_classifier = RandomForestClassifier(n_estimators=t, max_depth=d, bootstrap=True)
@@ -30,9 +31,10 @@ class Models_validator:
             
             tree_best_accuracy[t]=best_accuracy
             tree_best_depth[t]=score_depth[best_accuracy]
-        index=list(tree_best_accuracy.values()).index(max(tree_best_accuracy.values()))
+        maxacc=max(tree_best_accuracy.values())
+        index=list(tree_best_accuracy.values()).index(maxacc)
         t=list(tree_best_accuracy.keys())[index]
-        return t,tree_best_depth[t]
+        return t,tree_best_depth[t],maxacc
     
     def knn_parameters(self,neighbors_range,dimensions_range):
         dim_range=dimensions_range
@@ -102,9 +104,12 @@ rf_ds_list=list(range(1,16)) # creating list of depths for rf
 best_rf_depth=0  # best depth found after cv
 
 model_validator = Models_validator(X_scaled_test_data,y)
-rf_trees,rf_depth = model_validator.rf_parameters(range(500,1000,500),range(1,2))
-pca_dimensions,knn_neighbors = model_validator.knn_parameters(range(1,30),range(1,13))
+rf_trees,rf_depth,acc = model_validator.rf_parameters(range(96,97,1),range(10,11))
+#pca_dimensions,knn_neighbors = model_validator.knn_parameters(range(1,30),range(1,13))
 
+print(rf_trees,rf_depth,acc)
+
+exit()
 #Let's say you now decided to use the 5-NN 
 pca = PCA(n_components=pca_dimensions)
 clf1  = KNeighborsClassifier(n_neighbors = knn_neighbors)
