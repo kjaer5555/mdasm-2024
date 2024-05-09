@@ -92,14 +92,14 @@ rf_ds_list=list(range(1,16)) # creating list of depths for rf
 best_rf_depth=0  # best depth found after cv
 
 model_validator = Models_validator(X_scaled_test_data,y)
-rf_trees,rf_depth = model_validator.train_model('rf',range(6,127,5),range(10,11))
+#rf_trees,rf_depth = model_validator.train_model('rf',range(6,127,5),range(10,11))
 #print(rf_trees,rf_depth)
 #print()
-pca_dimensions,knn_neighbors = model_validator.train_model('knn',range(1,13),range(1,30),min_accuracy=0.65)
+pca_dimensions,knn_neighbors = model_validator.train_model('knn',range(1,13),range(1,201),min_accuracy=0.69)
 
-#print(pca_dimensions,knn_neighbors)
-#print()
-#exit()
+print(pca_dimensions,knn_neighbors)
+print()
+exit()
 #Let's say you now decided to use the 5-NN 
 pca = PCA(n_components=pca_dimensions)
 clf1  = KNeighborsClassifier(n_neighbors = knn_neighbors)
