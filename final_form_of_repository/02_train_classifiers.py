@@ -11,7 +11,11 @@ from sklearn.metrics import confusion_matrix
 from sklearn.model_selection import cross_val_score,cross_validate
 from sklearn.model_selection import GroupShuffleSplit, StratifiedGroupKFold,GroupKFold
 from sklearn.decomposition import PCA
-import os
+
+def select_key(d,value):
+    index=list(d.values()).index(value)
+    key=list(d.keys())[index]
+    return key
 
 class Models_validator:
     def __init__(self,x,y):
@@ -37,7 +41,7 @@ class Models_validator:
         for p1 in range1:
             print(p1)
             p2_acc=dict()
-            rec_p2=dict()
+            p2_rec=dict()
             for p2 in range2:
                 scores=self.get_scores(clf,p1,p2)
                 accuracy=scores['test_accuracy'].mean()
@@ -45,27 +49,24 @@ class Models_validator:
 
                 if accuracy>=min_accuracy:
                     p2_acc[p2]=accuracy
-                    rec_p2[recall]=p2
+                    p2_rec[p2]=recall
             
             #best_accuracy=max(acc_depth.keys())
-            if len(rec_p2.keys())>0:
-                best_recall=max(rec_p2.keys())
+            if len(p2_rec.keys())>0:
+                best_recall=max(p2_rec.values())
                 p1_recall[p1]=best_recall
-                p1_p2[p1]=rec_p2[best_recall]
-                p1_accuracy[p1]=p2_acc[rec_p2[best_recall]]
+                p2_for_best_recall=select_key(p2_rec,best_recall)
+                p1_p2[p1]=p2_for_best_recall
+                p1_accuracy[p1]=p2_acc[p2_for_best_recall]
         
         if len(p1_recall.values())>0:
             maxrec=max(p1_recall.values())
-            index=list(p1_recall.values()).index(maxrec)
-            p1=list(p1_recall.keys())[index]
-            maxacc=p1_accuracy[p1]
+            p1=select_key(p1_recall,maxrec)
+            acc=p1_accuracy[p1]
             print(maxrec)
-            print(maxacc)
+            print(acc)
             return p1,p1_p2[p1]
         return f"No model with accuracy at least {min_accuracy}"
-
-        
-        
 
 #Where did we store the features?
 file_features = 'train_75_people_data.csv'
@@ -78,7 +79,6 @@ df_features = pd.read_csv(file_features)
 x = np.array(df_features[feature_names])
 y =  df_features['cancer_or_not']   #now True means healthy nevus, False means something else
 patient_id = df_features['person_id']
-
 
 #Prepare cross-validation - images from the same patient must always stay together
 num_folds = 5
@@ -95,7 +95,7 @@ model_validator = Models_validator(X_scaled_test_data,y)
 #rf_trees,rf_depth = model_validator.train_model('rf',range(6,127,5),range(10,11))
 #print(rf_trees,rf_depth)
 #print()
-pca_dimensions,knn_neighbors = model_validator.train_model('knn',range(1,13),range(1,201),min_accuracy=0.69)
+pca_dimensions,knn_neighbors = model_validator.train_model('knn',range(1,13),range(1,27),min_accuracy=0.67)
 
 print(pca_dimensions,knn_neighbors)
 print()
