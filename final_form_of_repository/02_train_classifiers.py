@@ -8,7 +8,7 @@ from sklearn.metrics import confusion_matrix, classification_report
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.metrics import confusion_matrix
-from sklearn.model_selection import cross_val_score
+from sklearn.model_selection import cross_val_score,cross_validate
 from sklearn.model_selection import GroupShuffleSplit, StratifiedGroupKFold,GroupKFold
 from sklearn.decomposition import PCA
 import os
@@ -18,23 +18,39 @@ class Models_validator:
         self.x=x
         self.y=y
     def rf_parameters(self,tree_range,depth_range):
-        tree_best_depth=dict()
-        tree_best_accuracy=dict()
+        #maximize recall with the condition of the accuracy being at least 70%
+        tree_depth=dict()
+        tree_recall=dict()
+        tree_accuracy=dict()
         for t in tree_range:
             print(t)
-            score_depth=dict()
+            depth_acc=dict()
+            rec_depth=dict()
             for d in depth_range:
                 rf_classifier = RandomForestClassifier(n_estimators=t, max_depth=d, bootstrap=True)
-                scores = cross_val_score(rf_classifier, self.x, self.y, cv=5, scoring='accuracy') #perform cv
-                score_depth[scores.mean()]=d
-            best_accuracy=max(score_depth.keys())
+                scores = cross_validate(rf_classifier, self.x, self.y, cv=5, scoring=('accuracy','recall')) #perform cv
+                accuracy=scores['test_accuracy'].mean()
+                recall=scores['test_recall'].mean()
+
+                if accuracy>=0.7:
+                    depth_acc[d]=accuracy
+                    rec_depth[recall]=d
             
-            tree_best_accuracy[t]=best_accuracy
-            tree_best_depth[t]=score_depth[best_accuracy]
-        maxacc=max(tree_best_accuracy.values())
-        index=list(tree_best_accuracy.values()).index(maxacc)
-        t=list(tree_best_accuracy.keys())[index]
-        return t,tree_best_depth[t],maxacc
+            #best_accuracy=max(acc_depth.keys())
+            if len(rec_depth.keys())>0:
+                best_recall=max(rec_depth.keys())
+                tree_recall[t]=best_recall
+                tree_depth[t]=rec_depth[best_recall]
+                tree_accuracy[t]=depth_acc[rec_depth[best_recall]]
+        
+        maxrec=max(tree_recall.values())
+        index=list(tree_recall.values()).index(maxrec)
+        t=list(tree_recall.keys())[index]
+        maxacc=tree_accuracy[t]
+
+        print(maxrec)
+        print(maxacc)
+        return t,tree_depth[t]
     
     def knn_parameters(self,neighbors_range,dimensions_range):
         dim_range=dimensions_range
@@ -104,10 +120,10 @@ rf_ds_list=list(range(1,16)) # creating list of depths for rf
 best_rf_depth=0  # best depth found after cv
 
 model_validator = Models_validator(X_scaled_test_data,y)
-rf_trees,rf_depth,acc = model_validator.rf_parameters(range(96,97,1),range(10,11))
-#pca_dimensions,knn_neighbors = model_validator.knn_parameters(range(1,30),range(1,13))
+#rf_trees,rf_depth = model_validator.rf_parameters(range(6,127,5),range(10,11))
+pca_dimensions,knn_neighbors = model_validator.knn_parameters(range(1,30),range(1,13))
 
-print(rf_trees,rf_depth,acc)
+print(pca_dimensions,knn_neighbors)
 
 exit()
 #Let's say you now decided to use the 5-NN 
