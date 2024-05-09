@@ -17,83 +17,55 @@ class Models_validator:
     def __init__(self,x,y):
         self.x=x
         self.y=y
-    def rf_parameters(self,tree_range,depth_range):
-        #maximize recall with the condition of the accuracy being at least 70%
-        tree_depth=dict()
-        tree_recall=dict()
-        tree_accuracy=dict()
-        for t in tree_range:
-            print(t)
-            depth_acc=dict()
-            rec_depth=dict()
-            for d in depth_range:
-                rf_classifier = RandomForestClassifier(n_estimators=t, max_depth=d, bootstrap=True)
-                scores = cross_validate(rf_classifier, self.x, self.y, cv=5, scoring=('accuracy','recall')) #perform cv
+        self.scoring=('accuracy','recall')
+    
+    def get_scores(self,clf,p1,p2):
+        if clf=='rf':
+            classifier = RandomForestClassifier(n_estimators=p1, max_depth=p2, bootstrap=True)
+            scores = cross_validate(classifier, self.x, self.y, cv=5, scoring=self.scoring)
+        elif clf=='knn':
+            pca = PCA(n_components=p1)
+            pca_component = pca.fit_transform(self.x)
+            classifier = KNeighborsClassifier(n_neighbors=p2)
+            scores = cross_validate(classifier, pca_component , y, cv=5, scoring=self.scoring)
+        return scores
+
+    def train_model(self,clf,range1,range2,min_accuracy=0.7):
+        p1_p2=dict()
+        p1_recall=dict()
+        p1_accuracy=dict()
+        for p1 in range1:
+            print(p1)
+            p2_acc=dict()
+            rec_p2=dict()
+            for p2 in range2:
+                scores=self.get_scores(clf,p1,p2)
                 accuracy=scores['test_accuracy'].mean()
                 recall=scores['test_recall'].mean()
 
-                if accuracy>=0.7:
-                    depth_acc[d]=accuracy
-                    rec_depth[recall]=d
+                if accuracy>=min_accuracy:
+                    p2_acc[p2]=accuracy
+                    rec_p2[recall]=p2
             
             #best_accuracy=max(acc_depth.keys())
-            if len(rec_depth.keys())>0:
-                best_recall=max(rec_depth.keys())
-                tree_recall[t]=best_recall
-                tree_depth[t]=rec_depth[best_recall]
-                tree_accuracy[t]=depth_acc[rec_depth[best_recall]]
+            if len(rec_p2.keys())>0:
+                best_recall=max(rec_p2.keys())
+                p1_recall[p1]=best_recall
+                p1_p2[p1]=rec_p2[best_recall]
+                p1_accuracy[p1]=p2_acc[rec_p2[best_recall]]
         
-        maxrec=max(tree_recall.values())
-        index=list(tree_recall.values()).index(maxrec)
-        t=list(tree_recall.keys())[index]
-        maxacc=tree_accuracy[t]
+        if len(p1_recall.values())>0:
+            maxrec=max(p1_recall.values())
+            index=list(p1_recall.values()).index(maxrec)
+            p1=list(p1_recall.keys())[index]
+            maxacc=p1_accuracy[p1]
+            print(maxrec)
+            print(maxacc)
+            return p1,p1_p2[p1]
+        return f"No model with accuracy at least {min_accuracy}"
 
-        print(maxrec)
-        print(maxacc)
-        return t,tree_depth[t]
-    
-    def knn_parameters(self,neighbors_range,dimensions_range):
-        dim_range=dimensions_range
-        result={}
-        for i in dim_range:
-            k_list = neighbors_range # creating list of K for KNN
-            knn_cv_scores = [] # creating list of cv scores
-            best_knn_param=0 # best number of neighbors found after cv
-            best_score=0
-            
-            pca = PCA(n_components=i)
-            pca_component = pca.fit_transform(self.x)
-            
-            for k in k_list:
-                    knn = KNeighborsClassifier(n_neighbors=k)
-                    scores = cross_val_score(knn, pca_component , y, cv=5, scoring='accuracy') #perform cv
-                    knn_cv_scores.append(scores.mean())
-                    if knn_cv_scores[-1]>best_score: #find best score parameters
-                        best_score=knn_cv_scores[-1]
-                        best_knn_param=k
-                
-                # changing to misclassification error
-                    MSE = [1 - x for x in knn_cv_scores]
-                    best_k = k_list[MSE.index(min(MSE))]
-            result.update({f"{i} / {best_knn_param}":max(knn_cv_scores)})
         
-        maxscore=max(result.values())
-        pos=list(result.values()).index(maxscore)
-        key=list(result.keys())[pos]
-        dimensions = int(key.split("/")[0])
-        neighbors = int(key.split("/")[1])
-        #print(f"{dimensions}, {neighbors} -> {maxscore}")
-        return dimensions, neighbors
         
-        '''
-        score_neighbors=dict()
-        for n in neighbors_range:
-            kn_classifier = KNeighborsClassifier(n_neighbors=n)
-            scores = cross_val_score(kn_classifier, self.x, self.y, cv=5, scoring='accuracy') #perform cv
-            score_neighbors[scores.mean()]=n
-        
-        return score_neighbors[max(score_neighbors.keys())]
-        '''
 
 #Where did we store the features?
 file_features = 'train_75_people_data.csv'
@@ -120,12 +92,14 @@ rf_ds_list=list(range(1,16)) # creating list of depths for rf
 best_rf_depth=0  # best depth found after cv
 
 model_validator = Models_validator(X_scaled_test_data,y)
-#rf_trees,rf_depth = model_validator.rf_parameters(range(6,127,5),range(10,11))
-pca_dimensions,knn_neighbors = model_validator.knn_parameters(range(1,30),range(1,13))
+rf_trees,rf_depth = model_validator.train_model('rf',range(6,127,5),range(10,11))
+#print(rf_trees,rf_depth)
+#print()
+pca_dimensions,knn_neighbors = model_validator.train_model('knn',range(1,13),range(1,30),min_accuracy=0.65)
 
-print(pca_dimensions,knn_neighbors)
-
-exit()
+#print(pca_dimensions,knn_neighbors)
+#print()
+#exit()
 #Let's say you now decided to use the 5-NN 
 pca = PCA(n_components=pca_dimensions)
 clf1  = KNeighborsClassifier(n_neighbors = knn_neighbors)
