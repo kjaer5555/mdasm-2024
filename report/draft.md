@@ -1,3 +1,9 @@
+# Dataset information
+
+Our dataset is based on 978 photos from ……add citation…….. dataset. There are photos of all 6 diagnoses - BCC, ASK, SEK, MEL, NEV, SCC. We have used manually created masks ……possibly add automatic segmentation part…….. Due to the fact that the dataset sometimes contains more than one photo of the same patient, and sometimes even of the same lesion, we have made sure that all the photos of single patient are treated as a cohesive group. After partitioning the data into training and testing subsets, these groups remain intact within the same split. We have achieved that using sklearn.model_selection.StratifiedGroupKFold, which also maintains the proportion of the classes within the splits. In our case, that would mean the proportion of cancerous and non-cancerous lesions. At the end, the dataset is split in the following manner:
+......Add photo with the table........
+
+
 # Asymmetry Feature
 
 Apparently asymmetry is a well-defined term, but actually it can carry several meanings.
@@ -42,6 +48,22 @@ Which yielded that 4th method is the best and was used in our code.
 
 [5] Sirakov, N. M., M. Mete, and N. S. Chakrader. "Automatic Boundary Detection and Symmetry Calculation in Dermoscopy Images of Skin Lesions." In *2011 18th IEEE International Conference on Image Processing*, 1605-1608. Brussels, Belgium: IEEE, 2011. https://doi.org/10.1109/ICIP.2011.6115757.
 
+
+# Relative presence of important colors
+
+
+During our research, we have found two different approaches for the color extraction - the one in the article by Kasmi and Mokrani (2016) [1] and the one in the article by Ali, Li, O'Shea (2020) [2]. In both articles, the authors have identified 6 suspicious colors, whose presence in a lesion is an indication of a cancerous disease. These are light-brown, dark-brown, red, white, black and blue-gray. In the first article, using the RGB color space, the authors have chosen one single value for each of these colors. After that, they calculate the Euclidian distance between each pixel of the lesion and all these color values. The smallest distance indicates that the pixel is closest to that color. Then they set a threshold of 5%, stating that if at least 5% of the pixels in the lesion are close to a certain color, then this color is present on the lesion. 
+The second article has a similar approach, but they have used the CIELab color space as it is considered to more closely represent the human perception of the colors. They have used the Minkowski distance, which is a generalization of the Euclidian and Manhattan distances, and they have used an interval to define each color instead of a single value. We have instead used HSV color space, and because of that, we have to do a few modifications in order to match the methodology.
+RGB is structured as a cube of size 255 and each of the three values, R, G and B, work as amount from each ingredient. Due to this nature, using Euclidian or Manhattan distance does not make much difference. HSV on the other hand, is structured as a cylinder of radius and height 100, and the three values work independently. The same change in each of them is comprehended differently by the human eye. For example, a change of 40 in the Saturation makes the color look either milder or sharper, but it remains essentially the same. That change in Hue however, might change green to yellow. Due to this independence, Manhattan distance is better, as it treats each of the components individually and incorporates their scales separately.
+For similar reasons, choosing one reference value for each color in RGB color space and an interval for CIELab can work perfectly. In HSV, however, due to H being from 0 to 360 degrees, we face a problem around the borders, as the color [359,x,y] and the color [2,x,y] are almost indistinguishable for the human eye, but their Manhattan distance is 357, so they seem to be very different for the computer. 
+
+Therefore, we have created 5 separate bins for the 6 suspicious colors/dark-brown and light-brown have been combined, as the low quality of many of the photos and the shadows make it very hard to define a border between the two colors/. After picking color shades from various lesions and then testing these shades for similarity in We have found 13 different reference colors - 3/3/3/2/2 for red/ pink/ brown/ white/ blue-gray, chosen after a process of color picking from different lesions, and then
+In order to overcome this obstacle and to implement the ideas of the two articles, we have f
+After a consensus, we chose a few lesions which have a large representation of each color. Then using a color picker, we have found the exact shades of these colors. After further testing, we chose 13 different shades (3/3/3/2/2 for red/ pink/ brown/ white/ blue-gray)
+
+[1] Kasmi, R. and Mokrani, K. (2016), Classification of malignant melanoma and benign skin lesions: implementation of automatic ABCD rule. IET Image Processing, 10: 448-455. https://doi.org/10.1049/iet-ipr.2015.0385
+[2] Ali AR, Li J, O'Shea SJ. Towards the automatic detection of skin lesion shape asymmetry, color variegation and diameter in dermoscopic images. PLoS One. 2020 Jun 16;15(6):e0234352. doi: 10.1371/journal.pone.0234352. PMID: 32544197; PMCID: PMC7297317.
+
 # Predicitve power of the model
 
 The term ‘predictive power’ refers to the ability of a *model* (any type of model) to differentiate or predict true classes. Most common metric to quantify it are: AUC (Area under the curve) and Gini Coefficient, which can be treated as normalised AUC since $GINI=2\cdot AUC-1$, where $AUC \in [0.5, 1]$. It is often used in decision trees.
@@ -68,4 +90,5 @@ Since the changes were insignificant and we favour recall over accuracy we didn�
 # Automatic Segmentation
 
 ### Logistic regression
+
 
