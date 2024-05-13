@@ -89,6 +89,55 @@ Since the changes were insignificant and we favour recall over accuracy we didnâ
 
 # Automatic Segmentation
 
-### Logistic regression
+We briefly attempted doing the automatic segmentation. In order to do so we performed segmentation via classification followed by morphology processes, namely erosion and dilation.
 
+**Step by step process:**
 
+We trained KNN classifier for k=5. Algorithm decides for each of the We decided on using these features:
+
+|  | Justification |
+| --- | --- |
+| Red, blue, green, gray color (4) intensities | Skin lesions most often have different color and brightness than patientâ€™s skin. |
+| Gabor Filter | Gabor filter can capture texture differences. Some skin lesions have characteristics structs or elevations which this filter could capture. We used frequency=0.15, theta=0, and gaussian blur with sigma=3 in both dimensions. |
+| (X,Y) coordinates | Most skin lesions are not in the edge area of the image, rather in the center. |
+
+After that we applied erosion followed by dilation with a brush looking like:
+
+![Untitled](Raport%206305b3af738c4cbeb34dd713375495b1/Untitled%202.png)
+
+Which is a diamond with the diagonals of 18 pixels in length.
+
+We decided on using segmentation via classification in a favour of classification via thresholding because we considered it to be more powerful (it can also include pixel intensity as a parameter). So as to obtain better segmentation, after KNN and morphology, we tried perforimg segmentation via shape (active contour) - the idea was to, apply an active contour on a piece of an image selected by the mask obtained by KNN and morphology and cropped only to the bounding box. Even though the active contour was applied after trying it ot on a few samples from validation dataset we saw no big improvement, so we decided not to proceed with it..
+
+![Active contour helps a little, but not much](Raport%206305b3af738c4cbeb34dd713375495b1/Untitled%203.png)
+
+Active contour helps a little, but not much
+
+![Here as well.](Raport%206305b3af738c4cbeb34dd713375495b1/Untitled%204.png)
+
+Here as well.
+
+**Results:**
+
+As our dataset we used 150 lesion images and corresponding of human annotated masks [1]. 120 (75%) were used as train dataset and 30 (25%) as a validation dataset. As KNN is a lazy algorithm meaning that most computations are made during the inference, we decreased training sample size - from each image we sampled 100 pixels belonging to lesion and 100 not. So we got 30_000 learning datapoints. It solved the problem of imbalance as well.
+
+|  | Dice Score | Hausdorff distance |
+| --- | --- | --- |
+| Mean | 0.56 | 185.60 |
+| St. Deviation | 0.20 | 77.20 |
+
+![Example results](Raport%206305b3af738c4cbeb34dd713375495b1/5207b738-6986-436c-9b84-c0b99476b904.png)
+
+Example results
+
+Because of the low results we decided on not carrying on the efforts, though from the visual inspection [2] it is clear that most often predicted mask contains whole true mask which is a good sign.
+
+We suspect that perhaps tweaking morphology could better prepare intermediary mask for the active contour. There were many variable we have not checked, due to time constraints, like optimal number of neighbours, different classification algorithms.
+
+[1] [https://github.com/vcheplygina/fyp2022-imaging/tree/main/data](https://github.com/vcheplygina/fyp2022-imaging/tree/main/data)
+
+[2] Rest of images
+
+![download.png](Raport%206305b3af738c4cbeb34dd713375495b1/download.png)
+
+# Logistic Regression
