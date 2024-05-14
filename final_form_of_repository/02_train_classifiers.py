@@ -97,7 +97,11 @@ num_folds = 5
 group_kfold = GroupKFold(n_splits=num_folds)
 group_kfold.get_n_splits(x, y, patient_id)
 scaler = StandardScaler()
-X_scaled_train_data = scaler.fit_transform(x.T).T
+X_scaled_train_data = scaler.fit_transform(df_features[feature_names])
+#X_scaled_train_data_df = pd.DataFrame(X_scaled_train_data, columns=df_features[feature_names].columns)
+
+#X_scaled_train_data = x
+
 #X_scaled_train_data = scaler.fit_transform(x)
 
 rf_cv_scores = [] # creating list of cv scores
@@ -145,3 +149,4 @@ pickle.dump(aiakos, open(model1, 'wb'))
 pickle.dump(minos, open(model2, 'wb'))
 pickle.dump(rhadamanthys, open(model3, 'wb'))
 pickle.dump(pca,open('models/pca.sav','wb'))
+pickle.dump((scaler, feature_names), open('models/scaler.sav','wb'))

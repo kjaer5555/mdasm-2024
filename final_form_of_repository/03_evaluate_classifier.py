@@ -7,27 +7,23 @@ import sys
 import os
 
 def classify(img, mask):
-    scaler = StandardScaler()
+    scaler_reload, features = pd.read_pickle('./models/scaler.sav')
+
     #Extract features (the same ones that you used for training)
     X = extract_features(img, mask)
-    X=X[['H_value', 'S_value', 'V_value', 'red_presence', 'brown_presence', 'blue_presence', 'pink_presence', 'white_presence','black_presence','atypical_pigment_network', 'blue-white_veil', 'asymmetry_values']]
-    #X=pd.DataFrame(X)
-    X=np.array(X)
-    X_scaled = scaler.fit_transform(X.T).T
-    #X = np.array(X) # here should be your X in np.array format
-    
-    #Use standard scaler to transform data
-    #X_scaled = scaler.fit_transform(X.T)
-    #print(X_scaled)
-    #exit()
+
+    X = X[features]
+    X_scaled = scaler_reload.transform(X)
+
     
     model_log = pd.read_pickle('./models/groupR_log_regr_classifier.sav')
     model_random_forest = pd.read_pickle('./models/groupR_random_forest_classifier.sav')
     model_knn = pd.read_pickle('./models/groupR_knn_classifier.sav')
     pca_reload = pd.read_pickle('./models/pca.sav')
     
+    
     X_scaled_pca=pca_reload.transform(X_scaled)
-    #X_scaled_pca = pca_reload.transform(X_scaled)
+
 
     #prediction
     p1=model_log.predict_proba(X_scaled)
