@@ -24,19 +24,21 @@ We have approached the problem by first proposing three methods ourselves based 
 | Fully rotated aggregated symmetry | Mask is rotated around center of its bounding box. It computes average overlap percentage for each of the rotation angle. Fold axes go through middle of the image. | Elippsis resembling shapes with very different major and minor axis will get low score even though are highly symmetrical. |
 | Max Symmetry Axis | Mask is rotated around center of its bounding box. It returns overlap percentage for fold algongside axis which yields greatest overlap. Fold axis goes through the middle of the image. | It finds only one line of symmetry. Shapes with more than one line of symmetry won’t get higher score which intuitively should. |
 | Max Major + perpendicular minor symmetry axes | Mask is rotated around center of its bounding box. Major axis is defined as the axis alongside which fold yields highest overlap (like above). Minor axis is perpendicular to the major axis. The function returns average overlap percentage for folds alongside both axes. Axes go through middle of the image. | Assumes that the second, minor axis of symmetry is perpendicular to the main. Might now work for shapes like 5-stars. |
-| Minimum Bouding Box Method | Mask is rotated around center of its bounding box. Mask is so rotated that the bounding box has the smallest area. It returns overlap percentage for the fold alongside the axis which goes through center of the image and is parallel to the longer dimension (either width or height) | Also doesn’t capture if the object has more than one line of symmetry. |
+| Minimum Bounding Box Method | Mask is rotated around center of its bounding box. Mask is so rotated that the bounding box has the smallest area. It returns overlap percentage for the fold alongside the axis which goes through center of the image and is parallel to the longer dimension (either width or height) | Also doesn’t capture if the object has more than one line of symmetry. |
 
 *Caption: Fig n or sth*
 
-At the end we performed tests to see how well do each of these methods can differentiate the data:
+At the end we performed tests to see how well do each of these methods can differentiate the data. We randonly sampled one hundred annotated masks out of which 57 occured to be cancerous:
 
-< RESULTS >
+| Function | Score |
+| --- | --- |
+| Fully rotated aggregated symmetry | 0.658 |
+| Max symmetry axis | 0.646 |
+| Max Major + perpendicular minor symmetry axes | 0.681 |
+| Minimum Bounding Box Method | 0.670 |
+What could be done to get better score, was to get 50 cancerous and 50 non-cancerous related masks.
 
-TESTS RESULTS
-
-**I need here Sune to walk me through the code as I can barely understand what’s going on here.**
-
-Which yielded that 4th method is the best and was used in our code.
+Therefore we decided on the 3rd.
 
 [1] dermoscopedia contributors – Michael Kunz, Wilhelm Stolz, "ABCD rule," *dermoscopedia,* [https://dermoscopedia.org/w/index.php?title=ABCD_rule&oldid=20411](https://dermoscopedia.org/w/index.php?title=ABCD_rule&oldid=20411) (accessed May 12, 2024).
 
