@@ -267,7 +267,10 @@ def extract_features(imagepath,maskpath):
     segments_mean_in_hsv = rgb2hsv(np.array(segment_means))
     colors_presence=color_extraction(segments_mean_in_hsv)
     h_pic,s_pic,v_pic=color_variance(segments_mean_in_hsv)
-    imagename=imagepath.split('/')[1].split('.')[0]
+    try:
+        imagename=imagepath.split('/')[-1].split('.')[0]
+    except:
+        imagename=imagepath.split('.')[0]
     df_features['Name_Of_Picture'] = [imagename]
     df_features['asymmetry_values'] = [asymmetry_score_fully_rotated(cropped_lesion_mask)]
     df_features['H_value'] = [h_pic]

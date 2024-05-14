@@ -65,8 +65,8 @@ class Models_validator:
                 p1_p2[p1]=p2_for_best_score
                 p1_accuracy[p1]=p2_acc[p2_for_best_score]
         
-        df=pd.DataFrame.from_dict(p1_p2list, orient="index")
-        df.to_csv(f"{clf}_plot.csv")
+        #df=pd.DataFrame.from_dict(p1_p2list, orient="index")
+        #df.to_csv(f"{clf}_plot.csv")
 
         if len(p1_score.values())>0:
             maxscore=max(p1_score.values())
@@ -81,7 +81,7 @@ class Models_validator:
         return f"No model with accuracy at least {min_accuracy}"
 
 #Where did we store the features?
-file_features = 'train_75_people_data.csv'
+file_features = 'features/train_75_people_data.csv'
 feature_names = ['H_value', 'S_value', 'V_value', 'red_presence', 'brown_presence', 'blue_presence', 'pink_presence', 'white_presence','black_presence','atypical_pigment_network', 'blue-white_veil', 'asymmetry_values']
 
 # Load the features - remember the example features are not informative
@@ -97,13 +97,13 @@ num_folds = 5
 group_kfold = GroupKFold(n_splits=num_folds)
 group_kfold.get_n_splits(x, y, patient_id)
 scaler = StandardScaler()
-X_scaled_test_data = scaler.fit_transform(x)
+X_scaled_train_data = scaler.fit_transform(x)
 
 rf_cv_scores = [] # creating list of cv scores
 rf_ds_list=list(range(1,16)) # creating list of depths for rf
 best_rf_depth=0  # best depth found after cv
 
-model_validator = Models_validator(X_scaled_test_data,y)
+model_validator = Models_validator(X_scaled_train_data,y)
 
 #knn_results = model_validator.maximize_score('knn',range(3,4),range(1,27),score_label="roc_auc")
 #rf_results = model_validator.maximize_score('rf',range(71,72),range(1,7),score_label="roc_auc")
@@ -112,35 +112,32 @@ rf_results = model_validator.maximize_score('rf',range(6,127,5),range(1,7),score
 
 trees=rf_results["p1"]
 depth=rf_results["p2"]
-rf_recall=rf_results["score"]
-rf_accuracy=rf_results["accuracy"]
+#rf_recall=rf_results["score"]
+#rf_accuracy=rf_results["accuracy"]
 
-print(f"trees: {trees}, depth: {depth}, recall: {rf_recall}, accuracy: {rf_accuracy}")
+#print(f"trees: {trees}, depth: {depth}, recall: {rf_recall}, accuracy: {rf_accuracy}")
 
 dim=knn_results["p1"]
 k=knn_results["p2"]
-knn_recall=knn_results["score"]
-knn_accuracy=knn_results["accuracy"]
+#knn_recall=knn_results["score"]
+#knn_accuracy=knn_results["accuracy"]
 
-print(f"dim: {dim}, neighbors: {k}, recall: {knn_recall}, accuracy: {knn_accuracy}")
-exit()
-#Let's say you now decided to use the 5-NN 
 pca = PCA(n_components=dim)
+pca_component = pca.fit_transform(X_scaled_train_data)
 clf1  = KNeighborsClassifier(n_neighbors = k)
 clf2 = LogisticRegression()
 clf3 =RandomForestClassifier(n_estimators=trees, max_depth=depth, bootstrap=True)
-#It will be tested on external data, so we can try to maximize the use of our available data by training on 
-#ALL of x and y
-aiakos = clf1.fit(x,y)
+#three judges
+aiakos = clf1.fit(pca_component,y) #knn needs to fit for the pca component
 minos = clf2.fit(x,y)
 rhadamanthys = clf3.fit(x,y)
 
 #This is the classifier you need to save using pickle, add this to your zip file submission
-model1 = 'groupR_knn_classifier.sav'
-model2 = 'groupR_log_regr_classifier.sav'
-model3 = 'groupR_random_forest_classifier.sav'
+model1 = 'models/groupR_knn_classifier.sav'
+model2 = 'models/groupR_log_regr_classifier.sav'
+model3 = 'models/groupR_random_forest_classifier.sav'
 
 pickle.dump(aiakos, open(model1, 'wb'))
 pickle.dump(minos, open(model2, 'wb'))
 pickle.dump(rhadamanthys, open(model3, 'wb'))
-pickle.dump(pca,open('pca.sav','wb'))
+pickle.dump(pca,open('models/pca.sav','wb'))
