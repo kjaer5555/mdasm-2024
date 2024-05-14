@@ -25,7 +25,7 @@ class Models_validator:
     
     def get_scores(self,clf,p1,p2):
         if clf=='rf':
-            classifier = RandomForestClassifier(n_estimators=p1, max_depth=p2, bootstrap=True)
+            classifier = RandomForestClassifier(n_estimators=p1, max_depth=p2, bootstrap=True,random_state=42)
             scores = cross_validate(classifier, self.x, self.y, cv=5, scoring=self.scoring)
         elif clf=='knn':
             pca = PCA(n_components=p1)
@@ -35,24 +35,29 @@ class Models_validator:
         return scores
 
     def maximize_score(self,clf,range1,range2,score_label="roc_auc",min_accuracy=0.0):
+        p1_p2list=dict()
+        
         p1_p2=dict()
         p1_score=dict()
         p1_accuracy=dict()
+        print(f"Training: {clf}")
         for p1 in range1:
-            print(p1)
+            print(f"progress: {round(100*p1/range1[-1],2)}%")
             p2_acc=dict()
             p2_score=dict()
             for p2 in range2:
                 scores=self.get_scores(clf,p1,p2)
                 accuracy=scores['test_accuracy'].mean()
                 score=scores['test_'+score_label].mean()
+
                 #roc_auc=scores['test_roc_auc'].mean()
 
                 if accuracy>=min_accuracy:
                     p2_acc[p2]=accuracy
                     p2_score[p2]=score
-            
-            #best_accuracy=max(acc_depth.keys())
+
+            p1_p2list[p1]=p2_score.values()
+
             if len(p2_score.keys())>0:
                 best_score=max(p2_score.values())
                 p1_score[p1]=best_score
@@ -60,6 +65,9 @@ class Models_validator:
                 p1_p2[p1]=p2_for_best_score
                 p1_accuracy[p1]=p2_acc[p2_for_best_score]
         
+        df=pd.DataFrame.from_dict(p1_p2list, orient="index")
+        df.to_csv(f"{clf}_plot.csv")
+
         if len(p1_score.values())>0:
             maxscore=max(p1_score.values())
             p1=select_key(p1_score,maxscore)
@@ -96,24 +104,31 @@ rf_ds_list=list(range(1,16)) # creating list of depths for rf
 best_rf_depth=0  # best depth found after cv
 
 model_validator = Models_validator(X_scaled_test_data,y)
-rf_results = model_validator.maximize_score('rf',range(6,127,5),range(1,7)) #roc_auc
-#print(rf_trees,rf_depth)
-#print()
-#pca_dimensions,knn_neighbors = model_validator.train_model('knn',range(1,13),range(1,27),min_accuracy=0.67)
-#knn_results = model_validator.maximize_score('knn',range(1,13),range(1,27)) #roc_auc
+
+#knn_results = model_validator.maximize_score('knn',range(3,4),range(1,27),score_label="roc_auc")
+#rf_results = model_validator.maximize_score('rf',range(71,72),range(1,7),score_label="roc_auc")
+knn_results = model_validator.maximize_score('knn',range(1,13),range(1,27),score_label="roc_auc")
+rf_results = model_validator.maximize_score('rf',range(6,127,5),range(1,7),score_label="roc_auc")
 
 trees=rf_results["p1"]
 depth=rf_results["p2"]
-rf_roc_auc=rf_results["score"]
+rf_recall=rf_results["score"]
 rf_accuracy=rf_results["accuracy"]
 
-print(f"trees: {trees}, depth: {depth}, roc_auc: {rf_roc_auc}, accuracy: {rf_accuracy}")
+print(f"trees: {trees}, depth: {depth}, recall: {rf_recall}, accuracy: {rf_accuracy}")
+
+dim=knn_results["p1"]
+k=knn_results["p2"]
+knn_recall=knn_results["score"]
+knn_accuracy=knn_results["accuracy"]
+
+print(f"dim: {dim}, neighbors: {k}, recall: {knn_recall}, accuracy: {knn_accuracy}")
 exit()
 #Let's say you now decided to use the 5-NN 
-pca = PCA(n_components=pca_dimensions)
-clf1  = KNeighborsClassifier(n_neighbors = knn_neighbors)
+pca = PCA(n_components=dim)
+clf1  = KNeighborsClassifier(n_neighbors = k)
 clf2 = LogisticRegression()
-clf3 =RandomForestClassifier(n_estimators=rf_trees, max_depth=rf_depth, bootstrap=True)
+clf3 =RandomForestClassifier(n_estimators=trees, max_depth=depth, bootstrap=True)
 #It will be tested on external data, so we can try to maximize the use of our available data by training on 
 #ALL of x and y
 aiakos = clf1.fit(x,y)
