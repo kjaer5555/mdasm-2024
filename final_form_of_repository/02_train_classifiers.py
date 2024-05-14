@@ -97,7 +97,8 @@ num_folds = 5
 group_kfold = GroupKFold(n_splits=num_folds)
 group_kfold.get_n_splits(x, y, patient_id)
 scaler = StandardScaler()
-X_scaled_train_data = scaler.fit_transform(x)
+X_scaled_train_data = scaler.fit_transform(x.T).T
+#X_scaled_train_data = scaler.fit_transform(x)
 
 rf_cv_scores = [] # creating list of cv scores
 rf_ds_list=list(range(1,16)) # creating list of depths for rf
@@ -112,15 +113,18 @@ rf_results = model_validator.maximize_score('rf',range(6,127,5),range(1,7),score
 
 trees=rf_results["p1"]
 depth=rf_results["p2"]
-#rf_recall=rf_results["score"]
-#rf_accuracy=rf_results["accuracy"]
 
-#print(f"trees: {trees}, depth: {depth}, recall: {rf_recall}, accuracy: {rf_accuracy}")
+rf_recall=rf_results["score"]
+rf_accuracy=rf_results["accuracy"]
+
+print(f"trees: {trees}, depth: {depth}, recall: {rf_recall}, accuracy: {rf_accuracy}")
 
 dim=knn_results["p1"]
 k=knn_results["p2"]
-#knn_recall=knn_results["score"]
-#knn_accuracy=knn_results["accuracy"]
+knn_recall=knn_results["score"]
+knn_accuracy=knn_results["accuracy"]
+
+print(f"dim: {dim}, k: {k}, recall: {knn_recall}, accuracy: {knn_accuracy}")
 
 pca = PCA(n_components=dim)
 pca_component = pca.fit_transform(X_scaled_train_data)
@@ -129,8 +133,8 @@ clf2 = LogisticRegression()
 clf3 =RandomForestClassifier(n_estimators=trees, max_depth=depth, bootstrap=True)
 #three judges
 aiakos = clf1.fit(pca_component,y) #knn needs to fit for the pca component
-minos = clf2.fit(x,y)
-rhadamanthys = clf3.fit(x,y)
+minos = clf2.fit(X_scaled_train_data,y)
+rhadamanthys = clf3.fit(X_scaled_train_data,y)
 
 #This is the classifier you need to save using pickle, add this to your zip file submission
 model1 = 'models/groupR_knn_classifier.sav'

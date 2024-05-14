@@ -11,9 +11,13 @@ def classify(img, mask):
     #Extract features (the same ones that you used for training)
     X = extract_features(img, mask)
     X=X[['H_value', 'S_value', 'V_value', 'red_presence', 'brown_presence', 'blue_presence', 'pink_presence', 'white_presence','black_presence','atypical_pigment_network', 'blue-white_veil', 'asymmetry_values']]
-    X = np.array(X) # here should be your X in np.array format
-    #Use standard scaler to transform data
+    #X=pd.DataFrame(X)
+    X=np.array(X)
     X_scaled = scaler.fit_transform(X.T).T
+    #X = np.array(X) # here should be your X in np.array format
+    
+    #Use standard scaler to transform data
+    #X_scaled = scaler.fit_transform(X.T)
     #print(X_scaled)
     #exit()
     
@@ -30,7 +34,7 @@ def classify(img, mask):
     p2=model_random_forest.predict_proba(X_scaled)
     p3=model_knn.predict_proba(X_scaled_pca)
 
-    pred_prob=np.sum([p1[0][0],p2[0][0],p3[0][0]])/3
+    pred_prob=np.sum([p1[0][1],p2[0][1],p3[0][1]])/3
     pred_label=(pred_prob>0.5)
     
     return pred_label, pred_prob
@@ -41,11 +45,28 @@ if len(sys.argv)==3:
     print(classify(img,mask))
 else:
     print("No input")
-    '''
-    imgs=os.listdir("images")
-    for i in imgs:
-        imgpath="images/"+i
-        maskpath="masks/"+i.split(".")[0]+"_mask."+i.split(".")[1]
+    test_csv=pd.read_csv("../test_25_people_data.csv")
+    filenames=test_csv["Name_Of_Picture"].to_list()
+    y=test_csv["cancer_or_not"].to_list()
+
+    imgs=os.listdir("../images")
+    cancer_counter=0
+    all_counter=0
+    for i in range(len(filenames)):
+        
+        filename=filenames[i]
+        true_value=y[i]
+
+        print(i/len(filenames))
+
+        imgpath="../images/"+filename+".png"
+        maskpath="../masks/"+filename+"_mask.png"
         if os.path.exists(maskpath):
-            print(classify(imgpath,maskpath))
-    '''
+            cancer,prob=classify(imgpath,maskpath)
+            if cancer==true_value:
+                cancer_counter+=1
+            all_counter+=1
+        else:
+            print("nomask")
+    print("Accuracy: ",cancer_counter/all_counter)
+    
