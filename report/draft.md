@@ -36,6 +36,7 @@ At the end we performed tests to see how well do each of these methods can diffe
 | Max symmetry axis | 0.646 |
 | Max Major + perpendicular minor symmetry axes | 0.681 |
 | Minimum Bounding Box Method | 0.670 |
+
 What could be done to get better score, was to get 50 cancerous and 50 non-cancerous related masks.
 
 Therefore we decided on the 3rd.
