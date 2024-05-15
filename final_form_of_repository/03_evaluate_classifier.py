@@ -1,10 +1,5 @@
-import numpy as np
-import pickle
-from sklearn.preprocessing import StandardScaler
 import pandas as pd
 from extract_features import extract_features
-import sys
-import os
 
 #Combine logistic regression and random forest classifier
 def classify(img, mask):

@@ -4,12 +4,10 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.linear_model import LogisticRegression
 import pandas as pd
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.metrics import confusion_matrix, classification_report
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.neighbors import KNeighborsClassifier
-from sklearn.metrics import confusion_matrix
-from sklearn.model_selection import cross_val_score,cross_validate
-from sklearn.model_selection import GroupShuffleSplit, StratifiedGroupKFold,GroupKFold
+from sklearn.model_selection import cross_validate
+from sklearn.model_selection import GroupKFold
 from sklearn.decomposition import PCA
 
 def select_key(d,value):

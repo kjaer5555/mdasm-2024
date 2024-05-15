@@ -1,11 +1,8 @@
 import statistics
-from skimage import segmentation, color
 import numpy as np
 from skimage.color import rgb2hsv
 import matplotlib.pyplot as plt
-from skimage.segmentation import slic, mark_boundaries
-import csv
-import os
+from skimage.segmentation import slic
 import pandas as pd
 import matplotlib.pyplot as plt
 from sklearn.cluster import KMeans
