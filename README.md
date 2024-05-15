@@ -1,1 +1,1 @@
-# mdasm-2024
+# Projects in Data Science - Medical Imaging - group R
