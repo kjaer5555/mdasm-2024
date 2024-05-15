@@ -84,6 +84,8 @@ class Models_validator:
 file_features = 'features/train_75_people_data.csv'
 feature_names = ['H_value', 'S_value', 'V_value', 'red_presence', 'brown_presence', 'blue_presence', 'pink_presence', 'white_presence','black_presence','atypical_pigment_network', 'blue-white_veil', 'asymmetry_values']
 
+
+
 # Load the features - remember the example features are not informative
 df_features = pd.read_csv(file_features)
 
@@ -106,8 +108,6 @@ best_rf_depth=0  # best depth found after cv
 
 model_validator = Models_validator(X_scaled_train_data,y)
 
-#knn_results = model_validator.maximize_score('knn',range(3,4),range(1,27),score_label="roc_auc")
-#rf_results = model_validator.maximize_score('rf',range(71,72),range(1,7),score_label="roc_auc")
 knn_results = model_validator.maximize_score('knn',range(1,13),range(1,27),score_label="roc_auc")
 rf_results = model_validator.maximize_score('rf',range(6,98,1),range(1,7),score_label="roc_auc")
 

@@ -7,9 +7,9 @@ import matplotlib.pyplot as plt
 from extract_features import extract_features
 
 #Where is the raw data
-directory_images = "images/"
-directory_mask = "masks/"
-directory_metadata = '../image_ids_groups.csv'
+directory_images = "pictures + masks/images/"
+directory_mask = "pictures + masks/masks/"
+directory_metadata = '../metadata.csv'
 images = os.listdir(directory_images)
 image_extensions=dict()
 
