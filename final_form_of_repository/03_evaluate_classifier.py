@@ -8,20 +8,16 @@ import os
 
 def classify(img, mask):
     scaler_reload, features = pd.read_pickle('./models/scaler.sav')
+    model_log = pd.read_pickle('./models/groupR_log_regr_classifier.sav')
+    model_random_forest = pd.read_pickle('./models/groupR_random_forest_classifier.sav')
+    model_knn = pd.read_pickle('./models/groupR_knn_classifier.sav')
+    pca_reload = pd.read_pickle('./models/pca.sav')
 
     #Extract features (the same ones that you used for training)
     X = extract_features(img, mask)
 
     X = X[features]
     X_scaled = scaler_reload.transform(X)
-
-    
-    model_log = pd.read_pickle('./models/groupR_log_regr_classifier.sav')
-    model_random_forest = pd.read_pickle('./models/groupR_random_forest_classifier.sav')
-    model_knn = pd.read_pickle('./models/groupR_knn_classifier.sav')
-    pca_reload = pd.read_pickle('./models/pca.sav')
-    
-    
     X_scaled_pca=pca_reload.transform(X_scaled)
 
 
