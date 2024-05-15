@@ -82,8 +82,6 @@ class Models_validator:
 file_features = 'features/train_75_people_data.csv'
 feature_names = ['H_value', 'S_value', 'V_value', 'red_presence', 'brown_presence', 'blue_presence', 'pink_presence', 'white_presence','black_presence','atypical_pigment_network', 'blue-white_veil', 'asymmetry_values']
 
-
-
 # Load the features - remember the example features are not informative
 df_features = pd.read_csv(file_features)
 
