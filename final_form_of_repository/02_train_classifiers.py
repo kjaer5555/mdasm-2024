@@ -98,11 +98,7 @@ group_kfold = GroupKFold(n_splits=num_folds)
 group_kfold.get_n_splits(x, y, patient_id)
 scaler = StandardScaler()
 X_scaled_train_data = scaler.fit_transform(df_features[feature_names])
-#X_scaled_train_data_df = pd.DataFrame(X_scaled_train_data, columns=df_features[feature_names].columns)
 
-#X_scaled_train_data = x
-
-#X_scaled_train_data = scaler.fit_transform(x)
 
 rf_cv_scores = [] # creating list of cv scores
 rf_ds_list=list(range(1,16)) # creating list of depths for rf
@@ -113,7 +109,7 @@ model_validator = Models_validator(X_scaled_train_data,y)
 #knn_results = model_validator.maximize_score('knn',range(3,4),range(1,27),score_label="roc_auc")
 #rf_results = model_validator.maximize_score('rf',range(71,72),range(1,7),score_label="roc_auc")
 knn_results = model_validator.maximize_score('knn',range(1,13),range(1,27),score_label="roc_auc")
-rf_results = model_validator.maximize_score('rf',range(6,127,5),range(1,7),score_label="roc_auc")
+rf_results = model_validator.maximize_score('rf',range(6,98,1),range(1,7),score_label="roc_auc")
 
 trees=rf_results["p1"]
 depth=rf_results["p2"]
